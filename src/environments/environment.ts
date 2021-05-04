@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   wistia: {
     accessToken: 'a4b478f8e6e9251d683fd4399715ebc7775344700b54ea5e01894d128de34bae',
+    defaultFileId: '72627052'
   }
 };
 

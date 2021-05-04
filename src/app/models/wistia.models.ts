@@ -23,3 +23,8 @@ export interface IWistiaVideo {
         name: string;
     };
 }
+
+export interface IWistiaVideosResponse {
+    hasMoreItems: boolean;
+    videos: IWistiaVideo[];
+}

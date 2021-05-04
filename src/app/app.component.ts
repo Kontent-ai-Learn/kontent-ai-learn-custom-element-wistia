@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { of } from 'rxjs';
@@ -6,6 +6,7 @@ import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { CoreComponent } from './core/core.component';
 import { IWistiaProject, IWistiaVideo } from './models/wistia.models';
+import { KontentService } from './services/kontent.service';
 import { WistiaService } from './services/wistia.service';
 
 @Component({
@@ -13,52 +14,84 @@ import { WistiaService } from './services/wistia.service';
     templateUrl: './app.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent extends CoreComponent implements OnInit {
-    private wistia: any;
-
-    public readonly wistiaTokenVariable: string = 'WistiaToken';
-
-    public readonly accessToken?: string = this.getAccessToken();
-
+export class AppComponent extends CoreComponent implements OnInit, AfterViewChecked {
+    // readonly setup
+    public readonly wistiaTokenVariable: string = 'wistiaAccessToken';
     public readonly dropInElementId: string = 'WistiaUploaderElem';
+    private readonly pageSize: number = 9;
 
+    // config
+    public accessToken?: string;
+
+    // base
+    public loading: boolean = false;
+    public isDisabled: boolean = true;
+    public initialized: boolean = false;
+
+    // uploader
     public showUploader: boolean = false;
+    public uploadedVideoId?: string;
+
+    // projects
     public projects: IWistiaProject[] = [];
     public selectedProject?: IWistiaProject;
-
-    public loading: boolean = false;
-
     public projectsPerRow: number = 3;
     public projectsPerRowGap: string = '24px';
 
-    public videosPerRow: number = 4;
+    // videos
+    public showFileNotFoundError: boolean = false;
+    public videosPerRow: number = 3;
     public videosPerRowGap: string = '24px';
-
     public showLoadMoreVideos: boolean = false;
-    private pageSize: number = 8;
     public selectedVideo?: IWistiaVideo;
     public videosPage: number = 1;
     public videos: IWistiaVideo[] = [];
     public currentSearch?: string;
-
-    public uploadedVideoId?: string;
     public searchControl: FormControl = new FormControl();
 
-    public showFileNotFoundError: boolean = false;
-
-    constructor(private wistiaService: WistiaService, cdr: ChangeDetectorRef) {
+    constructor(private wistiaService: WistiaService, private kontentService: KontentService, cdr: ChangeDetectorRef) {
         super(cdr);
-        this.wistia = (window as any).Wistia;
     }
 
     ngOnInit(): void {
         this.initSearch();
+        this.initDisabledChanged();
 
-        // const currentVideoId: string | undefined = '72634383';
-        const currentVideoId: string | undefined = undefined;
+        if (this.isKontentContext()) {
+            this.kontentService.initCustomElement((data) => {
+                if (data.accessToken) {
+                    this.accessToken = data.accessToken;
+                    this.isDisabled = data.isDisabled;
+                    this.initialized = true;
 
-        if (this.accessToken) {
-            this.initProjects(this.accessToken, currentVideoId);
+                    super.detectChanges();
+
+                    this.initProjects(data.accessToken, data.value);
+                }
+            });
+        } else {
+            this.accessToken = this.getDefaultAccessToken();
+            this.isDisabled = false;
+            this.initialized = true;
+
+            if (this.accessToken) {
+                this.initProjects(this.accessToken, this.getDefaultFileId());
+            }
+        }
+    }
+
+    ngAfterViewChecked(): void {
+        // update size of Kontent UI
+        if (this.isKontentContext()) {
+            // this is required because otherwise the offsetHeight can return 0 in some circumstances
+            // https://stackoverflow.com/questions/294250/how-do-i-retrieve-an-html-elements-actual-width-and-height
+            setTimeout(() => {
+                const htmlElement = document.getElementById('htmlElem');
+                if (htmlElement) {
+                    const height = htmlElement.offsetHeight;
+                    this.kontentService.updateSizeToMatchHtml(height);
+                }
+            }, 50);
         }
     }
 
@@ -101,7 +134,7 @@ export class AppComponent extends CoreComponent implements OnInit {
     }
 
     handleSelectVideo(video: IWistiaVideo): void {
-        this.selectedVideo = video;
+        this.setSelectedVideo(video);
     }
 
     getVideoDate(video: IWistiaVideo): string {
@@ -109,7 +142,7 @@ export class AppComponent extends CoreComponent implements OnInit {
     }
 
     handleClearSelectedVideo(): void {
-        this.selectedVideo = undefined;
+        this.setSelectedVideo(undefined);
     }
 
     setUploadFileAsUploaded(fileId: string) {
@@ -125,10 +158,26 @@ export class AppComponent extends CoreComponent implements OnInit {
                         this.selectedProject = candidateProject;
                     }
 
-                    this.selectedVideo = video;
+                    this.setSelectedVideo(video);
 
                     this.handleHideUploader();
-                    super.markForCheck();
+                    super.detectChanges();
+                })
+            )
+        );
+    }
+
+    private setSelectedVideo(video: IWistiaVideo | undefined): void {
+        this.selectedVideo = video;
+        this.kontentService.setValue(video?.id);
+    }
+
+    private initDisabledChanged(): void {
+        super.subscribeToObservable(
+            this.kontentService.disabledChanged.pipe(
+                map((disabled) => {
+                    this.isDisabled = disabled;
+                    super.detectChanges();
                 })
             )
         );
@@ -152,9 +201,10 @@ export class AppComponent extends CoreComponent implements OnInit {
                                 this.currentSearch
                             )
                             .pipe(
-                                map((videos) => {
-                                    this.videos = videos;
-                                    super.markForCheck();
+                                map((videosResponse) => {
+                                    this.videos = videosResponse.videos;
+                                    this.showLoadMoreVideos = videosResponse.hasMoreItems;
+                                    super.detectChanges();
                                 })
                             );
                     }
@@ -162,7 +212,7 @@ export class AppComponent extends CoreComponent implements OnInit {
                     return of(undefined);
                 }),
                 map((value) => {
-                    super.markForCheck();
+                    super.detectChanges();
                 })
             )
         );
@@ -177,16 +227,11 @@ export class AppComponent extends CoreComponent implements OnInit {
     ): void {
         super.subscribeToObservable(
             this.wistiaService.listVideos(accessToken, projectId, pageSize, page, search).pipe(
-                map((videos) => {
-                    this.videos.push(...videos);
+                map((videosResponse) => {
+                    this.videos.push(...videosResponse.videos);
+                    this.showLoadMoreVideos = videosResponse.hasMoreItems;
 
-                    if (videos.length) {
-                        this.showLoadMoreVideos = true;
-                    } else {
-                        this.showLoadMoreVideos = false;
-                    }
-
-                    super.markForCheck();
+                    super.detectChanges();
                 })
             )
         );
@@ -238,8 +283,10 @@ export class AppComponent extends CoreComponent implements OnInit {
                             }
 
                             this.selectedVideo = video;
+
+                            return video;
                         }),
-                        catchError(error => {
+                        catchError((error) => {
                             this.showFileNotFoundError = true;
                             console.warn(`Could not load file with id '${currentVideoId}'`);
                             console.error(error);
@@ -248,20 +295,52 @@ export class AppComponent extends CoreComponent implements OnInit {
                         })
                     );
                 }),
+                switchMap((video) => {
+                    if (video) {
+                        // init media from the same project as is video
+                        return this.wistiaService
+                            .listVideos(
+                                accessToken,
+                                video.project.id,
+                                this.pageSize,
+                                this.videosPage,
+                                this.currentSearch
+                            )
+                            .pipe(
+                                map((videosResponse) => {
+                                    this.videos = videosResponse.videos;
+                                    this.showLoadMoreVideos = videosResponse.hasMoreItems;
+                                })
+                            );
+                    }
+
+                    return of(undefined);
+                }),
                 map(() => {
                     this.loading = false;
-                    super.markForCheck();
+                    super.detectChanges();
                 })
             )
         );
     }
 
-    private getAccessToken(): string | undefined {
-        // get variables from kontent custom element configuration in production
-        if (environment.production) {
-            return '';
+    private getDefaultAccessToken(): string | undefined {
+        if (this.isKontentContext()) {
+            return undefined;
         }
 
         return environment.wistia.accessToken;
+    }
+
+    private getDefaultFileId(): string | undefined {
+        if (this.isKontentContext()) {
+            return undefined;
+        }
+
+        return environment.wistia.defaultFileId;
+    }
+
+    private isKontentContext(): boolean {
+        return environment.production;
     }
 }

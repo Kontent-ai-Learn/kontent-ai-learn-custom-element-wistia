@@ -9,8 +9,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "netlify:deploy:dev": "netlify deploy",
-    "netlify:deploy:prod": "netlify deploy --prod"
+    "netlify:deploy:dev": "npm run build:prod && netlify deploy",
+    "netlify:deploy:prod": "npm run build:prod && netlify deploy --prod"
   },
   "private": true,
   "dependencies": {

@@ -22,6 +22,8 @@ $cardBackground: #fff;
 $searchBackground: #d3dff3;
 $errorBox: #db0000;
 $errorBoxText: #fff;
+$infoBox: #005975;
+$infoBoxText: #ffffff;
 
 @font-face {
     font-family: 'GT Walsheim Pro';
@@ -191,5 +193,12 @@ h5 {
     padding: 8px 16px;
     background-color: $errorBox;
     color: $errorBoxText;
+    border-radius: 8px
+}
+
+.info-box {
+    padding: 8px 16px;
+    background-color: $infoBox;
+    color: $infoBoxText;
     border-radius: 8px
 }
