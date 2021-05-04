@@ -26,7 +26,7 @@ export class AppComponent extends CoreComponent implements OnInit {
     public projects: IWistiaProject[] = [];
     public selectedProject?: IWistiaProject;
 
-    public loadingProjects: boolean = false;
+    public loading: boolean = false;
 
     public projectsPerRow: number = 3;
     public projectsPerRowGap: string = '24px';
@@ -43,7 +43,6 @@ export class AppComponent extends CoreComponent implements OnInit {
 
     public searchControl: FormControl = new FormControl();
 
-
     constructor(private wistiaService: WistiaService, cdr: ChangeDetectorRef) {
         super(cdr);
         this.wistia = (window as any).Wistia;
@@ -53,8 +52,11 @@ export class AppComponent extends CoreComponent implements OnInit {
     ngOnInit(): void {
         this.initSearch();
 
+        // const currentVideoId: string | undefined = '72634383';
+        const currentVideoId: string | undefined = undefined;
+
         if (this.accessToken) {
-            this.initProjects(this.accessToken);
+            this.initProjects(this.accessToken, currentVideoId);
         }
     }
 
@@ -176,11 +178,11 @@ export class AppComponent extends CoreComponent implements OnInit {
         });
     }
 
-    private initProjects(accessToken: string): void {
-        this.loadingProjects = true;
+    private initProjects(accessToken: string, currentVideoId?: string): void {
+        this.loading = true;
         super.subscribeToObservable(
             this.wistiaService.listProjects(accessToken).pipe(
-                map((projects) => {
+                switchMap((projects) => {
                     this.projects = projects.sort((b, a) => {
                         if (a.name < b.name) {
                             return -1;
@@ -190,7 +192,25 @@ export class AppComponent extends CoreComponent implements OnInit {
                         }
                         return 0;
                     });
-                    this.loadingProjects = false;
+
+                    if (!currentVideoId) {
+                        return of(undefined);
+                    }
+
+                    return this.wistiaService.videoInfo(accessToken, currentVideoId).pipe(
+                        map((video) => {
+                            const candidateProject = this.projects.find((m) => m.id === video.project.id);
+
+                            if (candidateProject) {
+                                this.selectedProject = candidateProject;
+                            }
+
+                            this.selectedVideo = video;
+                        })
+                    );
+                }),
+                map(() => {
+                    this.loading = false;
                     super.markForCheck();
                 })
             )

@@ -18,4 +18,8 @@ export interface IWistiaVideo {
         width: number;
         height: number;
     };
+    project: {
+        id: string;
+        name: string;
+    };
 }

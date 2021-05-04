@@ -2,7 +2,7 @@
     <div>
         <div libFlexRow>
             <div libFlexColumn libFlexFill>
-                <h2 *ngIf="!selectedProject">Choose a project</h2>
+                <h2 *ngIf="!selectedProject">Select project</h2>
                 <h2 *ngIf="selectedProject">{{ selectedProject.name }}</h2>
             </div>
             <div libFlexColumn *ngIf="selectedProject">
@@ -20,15 +20,13 @@
         <a (click)="handleShowUploader()">Upload video</a>
     </div>
 
-    <div class="push-top push-bottom divider"></div>
+    <div *ngIf="!showUploader" class="push-top push-bottom divider"></div>
 
     <div class="push-top" *ngIf="!showUploader">
-        <div *ngIf="loadingProjects; else projectsView">Loading projects ...</div>
-        <ng-template #projectsView>
+        <div *ngIf="loading">Loading ...</div>
+        <div>
             <div *ngIf="!selectedProject" [libFlexRow]="true" [libFlexRowAlign]="'stretch'">
                 <div
-                    class="w-cursor-pointer"
-                    (click)="handleSelectProject(project)"
                     libFlexColumn
                     [style.width]="'calc((100% / ' + projectsPerRow + ') - ' + projectsPerRowGap + ')'"
                     *ngFor="let project of projects"
@@ -45,12 +43,17 @@
                         <div class="light-text push-top">
                             {{ project.description }}
                         </div>
+                        <div class="push-top push-bottom-sm">
+                            <span (click)="handleSelectProject(project)" class="secondary-button">
+                                Select project
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </ng-template>
+        </div>
 
-        <div *ngIf="selectedProject" class="push-top">
+        <div class="push-top">
             <div *ngIf="selectedVideo">
                 <div>
                     <h3>Current video</h3>
@@ -64,35 +67,38 @@
                     </ng-template>
                 </div>
 
-                <div class="push-top-md" *ngIf="selectedProject">
-                    <a (click)="handleClearSelectedVideo()">Remove video</a>
-                </div>
-
                 <div class="push-top push-bottom divider"></div>
             </div>
 
-            <div class="push-top">
-                <h3>Select video</h3>
-            </div>
+            <div *ngIf="selectedProject">
+                <div class="push-top">
+                    <h3>Select video</h3>
+                </div>
 
-            <div class="push-top">
-                <input
-                    [placeholder]="'Video name (exact match only)'"
-                    class="search-input"
-                    type="search"
-                    autocomplete="off"
-                    [formControl]="searchControl"
-                />
-            </div>
+                <div class="push-top">
+                    <input
+                        [placeholder]="'Video name (exact match only)'"
+                        class="search-input"
+                        type="search"
+                        autocomplete="off"
+                        [formControl]="searchControl"
+                    />
+                </div>
 
-            <div class="push-top-md">
-                <ng-template [ngTemplateOutletContext]="{ videos: videos }" [ngTemplateOutlet]="videosTemplate">
-                </ng-template>
-            </div>
+                <div class="push-top">
+                    <div *ngIf="!videos.length" class="light-text">There are no videos</div>
+                    <ng-template
+                        *ngIf="videos.length"
+                        [ngTemplateOutletContext]="{ videos: videos }"
+                        [ngTemplateOutlet]="videosTemplate"
+                    >
+                    </ng-template>
+                </div>
 
-            <div class="push-top" libFlexRow [libFlexRowAlign]="'center'" *ngIf="showLoadMoreVideos">
-                <div libFlexColumn>
-                    <div (click)="handleLoadMoreVideos()" class="load-more-button">Load more</div>
+                <div class="push-top" libFlexRow [libFlexRowAlign]="'center'" *ngIf="showLoadMoreVideos">
+                    <div libFlexColumn>
+                        <div (click)="handleLoadMoreVideos()" class="primary-button">Load more</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -107,7 +113,7 @@
             *ngFor="let video of videos"
             [libFlexColumnAlign]="'top'"
         >
-            <div (click)="handleSelectVideo(video)" class="w-cursor-pointer card no-pad full-height">
+            <div class="card no-pad full-height">
                 <div class="pad">
                     <div style="min-height: 38px" libLineClamp [clampLines]="2">
                         {{ video.name }}
@@ -117,6 +123,22 @@
                     <img [src]="video.thumbnail.url" [style.width]="'100%'" />
                 </div>
                 <div class="pad light-text" libFlexRow>
+                    <div libFlexColumn>
+                        <span
+                            *ngIf="video.id !== selectedVideo?.id"
+                            (click)="handleSelectVideo(video)"
+                            class="secondary-button"
+                        >
+                            Select video
+                        </span>
+                        <span
+                            *ngIf="video.id === selectedVideo?.id"
+                            (click)="handleClearSelectedVideo()"
+                            class="primary-button"
+                        >
+                            Clear video
+                        </span>
+                    </div>
                     <div libFlexColumn libFlexFill>
                         {{ video.duration }}
                     </div>

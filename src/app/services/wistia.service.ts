@@ -22,8 +22,25 @@ export class WistiaService {
         );
     }
 
-    listVideos(accessToken: string, projectId: string, pageSize: number, page: number, search?: string): Observable<IWistiaVideo[]> {
-        let url = `${this.getUrl('medias', accessToken)}&project_id=${projectId}&type=video&sort_by=updated&page=${page}&per_page=${pageSize}`;
+    videoInfo(accessToken: string, videoId: string): Observable<IWistiaVideo> {
+        return this.httpClient.get<IWistiaVideo>(`${this.getUrl('medias', accessToken, `/${videoId}`)}`).pipe(
+            map((response) => {
+                return response;
+            })
+        );
+    }
+
+    listVideos(
+        accessToken: string,
+        projectId: string,
+        pageSize: number,
+        page: number,
+        search?: string
+    ): Observable<IWistiaVideo[]> {
+        let url = `${this.getUrl(
+            'medias',
+            accessToken
+        )}&project_id=${projectId}&type=video&sort_by=updated&page=${page}&per_page=${pageSize}`;
 
         if (search) {
             url += `&name=${search}`;
@@ -36,7 +53,7 @@ export class WistiaService {
         );
     }
 
-    private getUrl(action: WistiaAction, accessToken: string): string {
-        return `https://api.wistia.com/v1/${action}.json?access_token=${accessToken}`;
+    private getUrl(action: WistiaAction, accessToken: string, actionPostFix?: string): string {
+        return `https://api.wistia.com/v1/${action}${actionPostFix ? actionPostFix : ''}.json?access_token=${accessToken}`;
     }
 }
