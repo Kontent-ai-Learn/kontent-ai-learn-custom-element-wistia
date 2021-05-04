@@ -41,12 +41,13 @@ export class AppComponent extends CoreComponent implements OnInit {
     public videos: IWistiaVideo[] = [];
     public currentSearch?: string;
 
+    public uploadedVideoId?: string;
+
     public searchControl: FormControl = new FormControl();
 
     constructor(private wistiaService: WistiaService, cdr: ChangeDetectorRef) {
         super(cdr);
         this.wistia = (window as any).Wistia;
-        (window as any)._wapiq = (window as any)._wapiq || [];
     }
 
     ngOnInit(): void {
@@ -62,6 +63,7 @@ export class AppComponent extends CoreComponent implements OnInit {
 
     handleHideUploader(): void {
         this.showUploader = false;
+        this.uploadedVideoId = undefined;
     }
 
     handleShowUploader(): void {
@@ -107,6 +109,28 @@ export class AppComponent extends CoreComponent implements OnInit {
 
     handleClearSelectedVideo(): void {
         this.selectedVideo = undefined;
+    }
+
+    setUploadFileAsUploaded(fileId: string) {
+        if (!this.accessToken) {
+            return;
+        }
+        super.subscribeToObservable(
+            this.wistiaService.videoInfo(this.accessToken, fileId).pipe(
+                map((video) => {
+                    const candidateProject = this.projects.find((m) => m.id === video.project.id);
+
+                    if (candidateProject) {
+                        this.selectedProject = candidateProject;
+                    }
+
+                    this.selectedVideo = video;
+
+                    this.handleHideUploader();
+                    super.markForCheck();
+                })
+            )
+        );
     }
 
     private initSearch(): void {
@@ -169,11 +193,18 @@ export class AppComponent extends CoreComponent implements OnInit {
 
     private initUploader(elementId: string, accessToken: string, projectId: string): void {
         this.showUploader = true;
+        (window as any)._wapiq = (window as any)._wapiq || [];
         (window as any)._wapiq.push((W: any) => {
-            (window as any).wistiaUploader = new W.Uploader({
+            const uploader = new W.Uploader({
                 accessToken,
                 dropIn: elementId,
                 projectId
+            });
+            (window as any).wistiaUploader = uploader;
+
+            uploader.bind('uploadsuccess', (file: any, media: any) => {
+                this.uploadedVideoId = file.id;
+                super.detectChanges();
             });
         });
     }

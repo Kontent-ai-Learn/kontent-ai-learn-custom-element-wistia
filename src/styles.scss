@@ -164,7 +164,9 @@ h5 {
     text-transform: uppercase;
     font-size: 12px;
     font-weight: 500;
-    border-radius: 8px;
+    border-radius: 500px;
+    border: solid 1px $primaryColor;
+    border-radius: 500px;
 }
 
 .secondary-button {
