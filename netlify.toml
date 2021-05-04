@@ -1,0 +1,8 @@
+[build]
+  publish = "dist/custom-element-wistia"
+  command = "npm run build:prod"
++  functions = "./functions"
+[[redirects]]
+  from = "/*"
+  to = "/index.html"[build]
+  status = 200
