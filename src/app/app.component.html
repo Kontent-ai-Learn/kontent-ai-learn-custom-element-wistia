@@ -1,7 +1,14 @@
 <div *ngIf="initialized">
-    <div *ngIf="errorMessage" class="error-box">
+    <div *ngIf="errorMessage" class="error-box push-bottom">
         {{ errorMessage }}
     </div>
+
+    <ng-template #invalidInputData>
+        <div class="error-box push-bottom">
+            <div>Invalid input data</div>
+            <div class="push-top-sm" *ngIf="!accessToken">Missing '{{ wistiaTokenVariable }}' variable</div>
+        </div>
+    </ng-template>
 
     <div *ngIf="accessToken; else invalidInputData">
         <div *ngIf="showFileNotFoundError" class="error-box">
@@ -189,12 +196,5 @@
                 </div>
             </div>
         </div>
-    </div>
-</ng-template>
-
-<ng-template #invalidInputData>
-    <div class="error-box">
-        <div>Invalid input data</div>
-        <div class="push-top-sm" *ngIf="!accessToken">Missing '{{ wistiaTokenVariable }}' variable</div>
     </div>
 </ng-template>
