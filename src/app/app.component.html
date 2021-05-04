@@ -164,6 +164,9 @@
 </ng-template>
 
 <ng-template #invalidInputData>
-    <div>Invalid input data: Missing Access</div>
-    <div *ngIf="!accessToken">Missing '{{ wistiaTokenVariable }}' variable</div>
+    <div class="error-box">
+        <div>Invalid input data</div>
+        <div class="push-top-sm" *ngIf="!accessToken">Missing '{{ wistiaTokenVariable }}' variable</div>
+    </div>
+   
 </ng-template>
