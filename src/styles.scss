@@ -20,6 +20,8 @@ $textColorLight: #6f6f6f;
 $dividerColor: #e7e7e7;
 $cardBackground: #fff;
 $searchBackground: #d3dff3;
+$errorBox: #db0000;
+$errorBoxText: #fff;
 
 @font-face {
     font-family: 'GT Walsheim Pro';
@@ -183,4 +185,11 @@ h5 {
     &:hover {
         background-color: $secondaryColorHover;
     }
+}
+
+.error-box {
+    padding: 8px 16px;
+    background-color: $errorBox;
+    color: $errorBoxText;
+    border-radius: 8px
 }

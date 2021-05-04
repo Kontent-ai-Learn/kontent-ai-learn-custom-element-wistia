@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/cor
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { of } from 'rxjs';
-import { debounceTime, map, switchMap } from 'rxjs/operators';
+import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { CoreComponent } from './core/core.component';
 import { IWistiaProject, IWistiaVideo } from './models/wistia.models';
@@ -42,8 +42,9 @@ export class AppComponent extends CoreComponent implements OnInit {
     public currentSearch?: string;
 
     public uploadedVideoId?: string;
-
     public searchControl: FormControl = new FormControl();
+
+    public showFileNotFoundError: boolean = false;
 
     constructor(private wistiaService: WistiaService, cdr: ChangeDetectorRef) {
         super(cdr);
@@ -237,6 +238,13 @@ export class AppComponent extends CoreComponent implements OnInit {
                             }
 
                             this.selectedVideo = video;
+                        }),
+                        catchError(error => {
+                            this.showFileNotFoundError = true;
+                            console.warn(`Could not load file with id '${currentVideoId}'`);
+                            console.error(error);
+
+                            return of(undefined);
                         })
                     );
                 }),

@@ -11,6 +11,10 @@
         </div>
     </div>
 
+    <div *ngIf="showFileNotFoundError" class="push-top error-box">
+        Could not load existing file. It may have been deleted. See console for more details.
+    </div>
+
     <div *ngIf="showUploader" class="push-top uploader-wrapper">
         <a (click)="handleHideUploader()">Back to listing</a>
         <div class="uploader push-top" [id]="dropInElementId"></div>
