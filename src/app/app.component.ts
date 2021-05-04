@@ -59,8 +59,8 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         this.initDisabledChanged();
 
         if (this.isKontentContext()) {
-            try {
-                this.kontentService.initCustomElement((data) => {
+            this.kontentService.initCustomElement(
+                (data) => {
                     if (data.accessToken) {
                         this.accessToken = data.accessToken;
                         this.isDisabled = data.isDisabled;
@@ -70,11 +70,14 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
                         this.initProjects(data.accessToken, data.value);
                     }
-                });
-            } catch (error) {
-                console.error(error);
-                this.errorMessage = `Could not initialize custom element. Custom elements can only be embedded in an iframe`;
-            }
+                },
+                (error) => {
+                    this.initialized = true;
+                    console.error(error);
+                    this.errorMessage = `Could not initialize custom element. Custom elements can only be embedded in an iframe`;
+                    super.detectChanges();
+                }
+            );
         } else {
             this.accessToken = this.getDefaultAccessToken();
             this.isDisabled = false;
@@ -88,7 +91,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
     ngAfterViewChecked(): void {
         // update size of Kontent UI
-        if (this.isKontentContext() && this.initialized) {
+        if (this.isKontentContext()) {
             // this is required because otherwise the offsetHeight can return 0 in some circumstances
             // https://stackoverflow.com/questions/294250/how-do-i-retrieve-an-html-elements-actual-width-and-height
             setTimeout(() => {
