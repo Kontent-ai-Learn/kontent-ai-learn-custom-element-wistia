@@ -1,1 +1,135 @@
-<div [id]="dropInElementId" style="height: 360px; width: 640px"></div>
+<div *ngIf="accessToken; else invalidInputData">
+    <div>
+        <div libFlexRow>
+            <div libFlexColumn libFlexFill>
+                <h2 *ngIf="!selectedProject">Choose a project</h2>
+                <h2 *ngIf="selectedProject">{{ selectedProject.name }}</h2>
+            </div>
+            <div libFlexColumn *ngIf="selectedProject">
+                <a (click)="handleUnselectProject()">Change project</a>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="showUploader" class="push-top uploader-wrapper">
+        <a (click)="handleHideUploader()">Back to listing</a>
+        <div class="uploader push-top" [id]="dropInElementId"></div>
+    </div>
+
+    <div class="push-top" *ngIf="!showUploader && selectedProject">
+        <a (click)="handleShowUploader()">Upload video</a>
+    </div>
+
+    <div class="push-top push-bottom divider"></div>
+
+    <div class="push-top" *ngIf="!showUploader">
+        <div *ngIf="loadingProjects; else projectsView">Loading projects ...</div>
+        <ng-template #projectsView>
+            <div *ngIf="!selectedProject" [libFlexRow]="true" [libFlexRowAlign]="'stretch'">
+                <div
+                    class="w-cursor-pointer"
+                    (click)="handleSelectProject(project)"
+                    libFlexColumn
+                    [style.width]="'calc((100% / ' + projectsPerRow + ') - ' + projectsPerRowGap + ')'"
+                    *ngFor="let project of projects"
+                >
+                    <div class="card full-height">
+                        <div libFlexRow>
+                            <div libFlexColumn libFlexFill>
+                                <h4>{{ project.name }}</h4>
+                            </div>
+                            <div libFlexColumn class="light-text">
+                                {{ project.mediaCount }} {{ project.mediaCount === 1 ? 'video' : 'videos' }}
+                            </div>
+                        </div>
+                        <div class="light-text push-top">
+                            {{ project.description }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+
+        <div *ngIf="selectedProject" class="push-top">
+            <div *ngIf="selectedVideo">
+                <div>
+                    <h3>Current video</h3>
+                </div>
+
+                <div class="push-top">
+                    <ng-template
+                        [ngTemplateOutletContext]="{ videos: [selectedVideo] }"
+                        [ngTemplateOutlet]="videosTemplate"
+                    >
+                    </ng-template>
+                </div>
+
+                <div class="push-top-md" *ngIf="selectedProject">
+                    <a (click)="handleClearSelectedVideo()">Remove video</a>
+                </div>
+
+                <div class="push-top push-bottom divider"></div>
+            </div>
+
+            <div class="push-top">
+                <h3>Select video</h3>
+            </div>
+
+            <div class="push-top">
+                <input
+                    [placeholder]="'Video name (exact match only)'"
+                    class="search-input"
+                    type="search"
+                    autocomplete="off"
+                    [formControl]="searchControl"
+                />
+            </div>
+
+            <div class="push-top-md">
+                <ng-template [ngTemplateOutletContext]="{ videos: videos }" [ngTemplateOutlet]="videosTemplate">
+                </ng-template>
+            </div>
+
+            <div class="push-top" libFlexRow [libFlexRowAlign]="'center'" *ngIf="showLoadMoreVideos">
+                <div libFlexColumn>
+                    <div (click)="handleLoadMoreVideos()" class="load-more-button">Load more</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #videosTemplate let-videos="videos">
+    <div [libFlexRow]="true" [libFlexRowAlign]="'stretch'">
+        <div
+            libFlexColumn
+            [style.width]="'calc((100% / ' + videosPerRow + ') - ' + videosPerRowGap + ')'"
+            *ngFor="let video of videos"
+            [libFlexColumnAlign]="'top'"
+        >
+            <div (click)="handleSelectVideo(video)" class="w-cursor-pointer card no-pad full-height">
+                <div class="pad">
+                    <div style="min-height: 38px" libLineClamp [clampLines]="2">
+                        {{ video.name }}
+                    </div>
+                </div>
+                <div>
+                    <img [src]="video.thumbnail.url" [style.width]="'100%'" />
+                </div>
+                <div class="pad light-text" libFlexRow>
+                    <div libFlexColumn libFlexFill>
+                        {{ video.duration }}
+                    </div>
+                    <div libFlexColumn>
+                        {{ getVideoDate(video) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #invalidInputData>
+    <div>Invalid input data: Missing Access</div>
+    <div *ngIf="!accessToken">Missing '{{ wistiaTokenVariable }}' variable</div>
+</ng-template>

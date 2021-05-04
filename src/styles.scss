@@ -1,0 +1,164 @@
+@import './app/flex/flex';
+@import './app/positioning/pad';
+@import './app/positioning/push';
+@import './app/positioning/pull';
+
+@include flex();
+@include pad-utilities();
+@include push-utilities();
+@include pull-utilities();
+
+$primaryColor: #db3c00;
+$primaryColorContrast: #fff;
+$linkColor: #db3c00;
+$linkColorHover: #953000;
+$textColor: #525252;
+$textColorLight: #6f6f6f;
+$dividerColor: #e7e7e7;
+$cardBackground: #fff;
+$searchBackground: #d3dff3;
+
+@font-face {
+    font-family: 'GT Walsheim Pro';
+    src: url(assets/fonts/GT-Walsheim-Bold.woff2) format('woff2'),
+        url(assets/fonts/GT-Walsheim-Bold.woff) format('woff'),
+        url(assets/fonts/GT-Walsheim-Bold.eot) format('embedded-opentype'),
+        url(assets/fonts/GT-Walsheim-Bold.ttf) format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'GT Walsheim Pro';
+    src: url(assets/fonts/GT-Walsheim-Medium.woff2) format('woff2'),
+        url(assets/fonts/GT-Walsheim-Medium.woff) format('woff'),
+        url(assets/fonts/GT-Walsheim-Medium.eot) format('embedded-opentype'),
+        url(assets/fonts/GT-Walsheim-Medium.ttf) format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'GT Walsheim Pro';
+    src: url(assets/fonts/GT-Walsheim-Regular.woff2) format('woff2'),
+        url(assets/fonts/GT-Walsheim-Regular.woff) format('woff'),
+        url(assets/fonts/GT-Walsheim-Regular.eot) format('embedded-opentype'),
+        url(assets/fonts/GT-Walsheim-Regular.ttf) format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'GT Walsheim Pro';
+    src: url(assets/fonts/GT-Walsheim-Light.woff2) format('woff2'),
+        url(assets/fonts/GT-Walsheim-Light.woff) format('woff'),
+        url(assets/fonts/GT-Walsheim-Light.eot) format('embedded-opentype'),
+        url(assets/fonts/GT-Walsheim-Light.ttf) format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+body {
+    font-family: 'GT Walsheim Pro';
+    color: $textColor;
+}
+
+a {
+    color: $linkColor;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 16px;
+    letter-spacing: 0.1ch;
+    text-transform: uppercase;
+    cursor: pointer;
+
+    &:hover {
+        color: $linkColorHover;
+        text-decoration: underline;
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    margin: 0;
+    font-weight: 500;
+    color: $textColor;
+}
+
+.uploader-wrapper {
+    width: 100%;
+
+    .uploader {
+        height: 300px;
+        width: 450px;
+    }
+}
+
+.divider {
+    border-bottom: solid 1px $dividerColor;
+}
+
+.card {
+    padding: 16px 24px;
+    background-color: $cardBackground;
+    box-shadow: rgb(0 0 0 / 3%) 0px 0px 8px, rgb(16 33 60 / 16%) 0px 8px 14px;
+    border-radius: 8px;
+
+    &.no-pad {
+        padding: 0px;
+    }
+}
+
+.light-text {
+    color: $textColorLight;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.full-height {
+    height: 100%;
+}
+
+.w-cursor-pointer {
+    cursor: pointer;
+}
+
+.search-input {
+    padding: 16px 24px;
+    letter-spacing: 0.07rem;
+    background-color: $searchBackground;
+    width: 100%;
+    font-size: 14px;
+    border: solid 1px $dividerColor;
+    border: 8px;
+    color: $textColorLight;
+
+    &::-webkit-input-placeholder,
+    &:-ms-input-placeholder,
+    &::placeholder {
+        font-size: 14px;
+        opacity: 0.8;
+    }
+
+    &:focus, &:focus-visible {
+        outline: none;
+    }
+}
+
+.load-more-button {
+    cursor: pointer;
+    background-color: $primaryColor;
+    color: $primaryColorContrast;
+    padding: 14px 22px;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;;
+}
