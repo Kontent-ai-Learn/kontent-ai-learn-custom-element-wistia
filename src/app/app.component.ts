@@ -88,7 +88,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
     ngAfterViewChecked(): void {
         // update size of Kontent UI
-        if (this.isKontentContext()) {
+        if (this.isKontentContext() && this.initialized) {
             // this is required because otherwise the offsetHeight can return 0 in some circumstances
             // https://stackoverflow.com/questions/294250/how-do-i-retrieve-an-html-elements-actual-width-and-height
             setTimeout(() => {
