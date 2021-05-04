@@ -1,7 +1,11 @@
 <div *ngIf="initialized">
     <div *ngIf="accessToken; else invalidInputData">
-        <div *ngIf="showFileNotFoundError" class="push-top error-box">
+        <div *ngIf="showFileNotFoundError" class="error-box">
             Could not load existing file. It may have been deleted. See console for more details.
+        </div>
+
+        <div *ngIf="errorMessage" class="error-box">
+            {{ errorMessage }}
         </div>
 
         <div class="light-text" *ngIf="loading">Loading...</div>

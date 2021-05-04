@@ -27,6 +27,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
     public loading: boolean = false;
     public isDisabled: boolean = true;
     public initialized: boolean = false;
+    public errorMessage?: string;
 
     // uploader
     public showUploader: boolean = false;
@@ -58,17 +59,22 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         this.initDisabledChanged();
 
         if (this.isKontentContext()) {
-            this.kontentService.initCustomElement((data) => {
-                if (data.accessToken) {
-                    this.accessToken = data.accessToken;
-                    this.isDisabled = data.isDisabled;
-                    this.initialized = true;
+            try {
+                this.kontentService.initCustomElement((data) => {
+                    if (data.accessToken) {
+                        this.accessToken = data.accessToken;
+                        this.isDisabled = data.isDisabled;
+                        this.initialized = true;
 
-                    super.detectChanges();
+                        super.detectChanges();
 
-                    this.initProjects(data.accessToken, data.value);
-                }
-            });
+                        this.initProjects(data.accessToken, data.value);
+                    }
+                });
+            } catch (error) {
+                console.error(error);
+                this.errorMessage = `Could not initialize custom element. Custom elements can only be embedded in an iframe`;
+            }
         } else {
             this.accessToken = this.getDefaultAccessToken();
             this.isDisabled = false;
@@ -120,6 +126,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         this.videos = [];
         this.videosPage = 1;
         this.currentSearch = undefined;
+        this.handleHideUploader();
     }
 
     handleSelectProject(project: IWistiaProject): void {
@@ -169,7 +176,10 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
     private setSelectedVideo(video: IWistiaVideo | undefined): void {
         this.selectedVideo = video;
-        this.kontentService.setValue(video?.id);
+
+        if (this.isKontentContext()) {
+            this.kontentService.setValue(video?.id.toString());
+        }
     }
 
     private initDisabledChanged(): void {

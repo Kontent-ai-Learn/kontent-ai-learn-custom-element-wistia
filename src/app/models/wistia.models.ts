@@ -6,7 +6,7 @@ export interface IWistiaProject {
 }
 
 export interface IWistiaVideo {
-    id: string;
+    id: number;
     name: string;
     description?: string;
     created: string;

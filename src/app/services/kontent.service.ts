@@ -17,6 +17,7 @@ export class KontentService {
 
     initCustomElement(onInit: (data: IElementInit) => void): void {
         CustomElement.init((element: any, context: any) => {
+            console.log(element);
             onInit({
                 value: element.value,
                 isDisabled: element.disabled,
@@ -30,7 +31,7 @@ export class KontentService {
     }
 
     setValue(value?: string): void {
-        CustomElement.setValue(value);
+        CustomElement.setValue(value ?? null);
     }
 
     updateSizeToMatchHtml(height: number): void {
