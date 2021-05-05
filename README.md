@@ -34,7 +34,7 @@ This custom element for [Kentico Kontent](https://kontent.ai) allows users to up
 
 ## Demo
 
-![Demo Animation][demo]
+![Demo Animation][product-demo]
 
 ## Quick Deploy
 
