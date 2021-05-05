@@ -93,4 +93,4 @@ Originally created by [@Enngage](https://github.com/Enngage)
 [gallery-shield]: https://img.shields.io/static/v1?label=&message=extension%20gallery&style=for-the-badge&color=51bce0
 [stack-shield]: https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white&style=for-the-badge
 [discussion-shield]: https://img.shields.io/badge/GitHub-Discussions-FE7A16.svg?logo=github&style=for-the-badge
-[product-demo]: docs/demo.gif?raw=true
+[product-demo]: demo.gif?raw=true
