@@ -6,8 +6,8 @@
 [![GitHub Discussions][discussion-shield]](https://github.com/Kentico/Home/discussions)
 
 <p align="center">
-<image src="docs/kontent.webp" alt="kontent logo" width="300" />
-<image src="docs/wistia.png" 
+<image src="docs/kontent.webp" alt="kontent logo" width="150" />
+<image style="margin-left:24px" src="docs/wistia.png" 
 alt="wistia logo" width="300">
 </p>
 
@@ -26,11 +26,11 @@ This custom element for [Kentico Kontent](https://kontent.ai) allows users to up
 
 ## Features
 
-- Editors can
-  - Select projects from Wistia
-  - Upload new files
-  - Search media files by name
-  - Store media id in custom element as value  
+-   Editors can
+    -   Select projects from Wistia
+    -   Upload new files
+    -   Search media files by name
+    -   Store media id in custom element as value
 
 ## Demo
 
@@ -43,11 +43,12 @@ Netlify has made this easy. If you click the deploy button below, it will guide 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Enngage/kontent-custom-element-wistia)
 
 ## Configuration
+
 You will need to add the custom element to a content type filling in the hosted code URL and the following JSON parameters:
 
 ```json
 {
-  "wistiaAccessToken": "<YOUR WISTIA ACCESS TOKEN>"
+    "wistiaAccessToken": "<YOUR WISTIA ACCESS TOKEN>"
 }
 ```
 
@@ -55,8 +56,8 @@ You will need to add the custom element to a content type filling in the hosted 
 
 The custom element saves single id of selected media file as string value.
 
-
 ## Contributors
+
 We have collected notes on how to contribute to this project in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Originally created by [@Enngage](https://github.com/Enngage)
@@ -71,12 +72,10 @@ Originally created by [@Enngage](https://github.com/Enngage)
 
 ## Additional Resources
 
-- [Custom Element Gallery on github](https://kentico.github.io/kontent-custom-element-samples/gallery/)
-- [Kentico Kontent's Integration documentation](https://docs.kontent.ai/tutorials/develop-apps/integrate/integrations-overview)
-- [Custom Element documentation](https://docs.kontent.ai/tutorials/develop-apps/integrate/content-editing-extensions)
-- [Custom Element API reference](https://docs.kontent.ai/reference/custom-elements-js-api)
-
-
+-   [Custom Element Gallery on github](https://kentico.github.io/kontent-custom-element-samples/gallery/)
+-   [Kentico Kontent's Integration documentation](https://docs.kontent.ai/tutorials/develop-apps/integrate/integrations-overview)
+-   [Custom Element documentation](https://docs.kontent.ai/tutorials/develop-apps/integrate/content-editing-extensions)
+-   [Custom Element API reference](https://docs.kontent.ai/reference/custom-elements-js-api)
 
 [last-commit]: https://img.shields.io/github/last-commit/Enngage/kontent-custom-element-wistia?style=for-the-badge
 [contributors-shield]: https://img.shields.io/github/contributors/Enngage/kontent-custom-element-wistia.svg?style=for-the-badge
