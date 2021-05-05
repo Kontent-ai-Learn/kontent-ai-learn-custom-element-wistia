@@ -1,27 +1,96 @@
-# CustomElementWistia
+![Last modified][last-commit]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.11.
+[![Stack Overflow][stack-shield]](https://stackoverflow.com/tags/kentico-kontent)
+[![GitHub Discussions][discussion-shield]](https://github.com/Kentico/Home/discussions)
 
-## Development server
+<p align="center">
+<image src="docs/01-kk-logo-main.svg" alt="kontent logo" width="300" />
+<image src="docs/bynder_logo.png" 
+alt="commercetools logo" width="300">
+</p>
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#demo">Demo</a> •
+  <a href="#quick-deploy">Deploy</a> •
+  <a href="#configuration">Configuration</a> •
+  <a href="#what-is-saved">Saved value</a> •
+  <a href="#contributors">Contributors</a> •
+  <a href="#license">License</a> •
+  <a href="#additional-resources">Resources</a>
+</p>
 
-## Code scaffolding
+This custom element for [Kentico Kontent](https://kontent.ai) allows users to upload, search & select videos from [wistia](https://www.wistia.com) media projects.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Features
 
-## Build
+- Editors can
+  - Select projects from Wistia
+  - Upload new files
+  - Search media files by name
+  - Store media id in custom element as value  
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Demo
 
-## Running unit tests
+![Demo Animation][demo]
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Quick Deploy
 
-## Running end-to-end tests
+Netlify has made this easy. If you click the deploy button below, it will guide you through the process of deploying it to Netlify and leave you with a copy of the repository in your account as well.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Enngage/kontent-custom-element-wistia)
 
-## Further help
+## Configuration
+You will need to add the custom element to a content type filling in the hosted code URL and the following JSON parameters:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```json
+{
+  "wistiaAccessToken": "<YOUR WISTIA ACCESS TOKEN>"
+}
+```
+
+## What is Saved
+
+The custom element saves single id of selected media file as string value.
+
+
+## Contributors
+We have collected notes on how to contribute to this project in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Originally created by [@Enngage](https://github.com/Enngage)
+
+<a href="https://github.com/Enngage/kontent-custom-element-wistia/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Enngage/kontent-custom-element-wistia" />
+</a>
+
+## License
+
+[MIT](https://tldrlegal.com/license/mit-license)
+
+## Additional Resources
+
+- [Custom Element Gallery on github](https://kentico.github.io/kontent-custom-element-samples/gallery/)
+- [Kentico Kontent's Integration documentation](https://docs.kontent.ai/tutorials/develop-apps/integrate/integrations-overview)
+- [Custom Element documentation](https://docs.kontent.ai/tutorials/develop-apps/integrate/content-editing-extensions)
+- [Custom Element API reference](https://docs.kontent.ai/reference/custom-elements-js-api)
+
+
+
+[last-commit]: https://img.shields.io/github/last-commit/Enngage/kontent-custom-element-wistia?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/Enngage/kontent-custom-element-wistia.svg?style=for-the-badge
+[contributors-url]: https://github.com/Enngage/kontent-custom-element-wistia/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/Enngage/kontent-custom-element-wistia.svg?style=for-the-badge
+[forks-url]: https://github.com/Enngage/kontent-custom-element-wistia/network/members
+[stars-shield]: https://img.shields.io/github/stars/Enngage/kontent-custom-element-wistia.svg?style=for-the-badge
+[stars-url]: https://github.com/Enngage/kontent-custom-element-wistia/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Enngage/kontent-custom-element-wistia.svg?style=for-the-badge
+[issues-url]: https://github.com/Enngage/kontent-custom-element-wistia/issues
+[license-shield]: https://img.shields.io/github/license/Enngage/kontent-custom-element-wistia.svg?style=for-the-badge
+[license-url]: https://github.com/Enngage/kontent-custom-element-wistia/blob/master/LICENSE
+[core-shield]: https://img.shields.io/static/v1?label=&message=core%20integration&style=for-the-badge&color=FF5733
+[gallery-shield]: https://img.shields.io/static/v1?label=&message=extension%20gallery&style=for-the-badge&color=51bce0
+[stack-shield]: https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white&style=for-the-badge
+[discussion-shield]: https://img.shields.io/badge/GitHub-Discussions-FE7A16.svg?logo=github&style=for-the-badge
+[product-demo]: docs/demo.gif?raw=true
