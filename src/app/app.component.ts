@@ -22,9 +22,10 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
     // config
     public accessToken?: string;
+    public wistiaSubdomain?: string;
 
     // base
-    public loading: boolean = false;
+    public loading: boolean = true;
     public isDisabled: boolean = true;
     public initialized: boolean = false;
     public errorMessage?: string;
@@ -40,6 +41,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
     // videos
     public showFileNotFoundError: boolean = false;
+    public showFileNotSelected: boolean = false;
     public videosPerRow: number = 3;
     public videosPerRowGap: string = '24px';
     public showLoadMoreVideos: boolean = false;
@@ -48,6 +50,14 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
     public videos: IWistiaVideo[] = [];
     public currentSearch?: string;
     public searchControl: FormControl = new FormControl();
+
+    public get selectedVideoEditUrl(): string | undefined {
+        if (!this.selectedVideo || !this.wistiaSubdomain) {
+            return undefined;
+        }
+
+        return this.wistiaService.getVideoEditUrl(this.wistiaSubdomain, this.selectedVideo);
+    }
 
     constructor(private wistiaService: WistiaService, private kontentService: KontentService, cdr: ChangeDetectorRef) {
         super(cdr);
@@ -62,16 +72,18 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
                 (data) => {
                     if (data.accessToken) {
                         this.accessToken = data.accessToken;
+                        this.wistiaSubdomain = data.subdomain;
                         this.isDisabled = data.isDisabled;
                         this.initialized = true;
 
                         super.detectChanges();
 
-                        this.initProjects(data.accessToken, data.value);
+                        this.initProjects(data.accessToken, data.value?.hashed_id);
                     }
                 },
                 (error) => {
                     this.initialized = true;
+                    this.loading = false;
                     console.error(error);
                     this.errorMessage = `Could not initialize custom element. Custom elements can only be embedded in an iframe`;
                     super.detectChanges();
@@ -84,6 +96,8 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
             if (this.accessToken) {
                 this.initProjects(this.accessToken, this.getDefaultFileId());
+            } else {
+                this.loading = false;
             }
         }
     }
@@ -179,7 +193,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         this.selectedVideo = video;
 
         if (this.isKontentContext()) {
-            this.kontentService.setValue(video?.id.toString());
+            this.kontentService.setValue(video);
         }
     }
 

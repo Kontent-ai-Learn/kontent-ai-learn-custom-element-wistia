@@ -49,13 +49,64 @@ You will need to add the custom element to a content type filling in the hosted 
 
 ```json
 {
-    "wistiaAccessToken": "<YOUR WISTIA ACCESS TOKEN>"
+    "wistiaAccessToken": "<YOUR WISTIA ACCESS TOKEN>",
+    "wistiaSubdomain": "<YOUR WISTIA SUBDOMAIN>",
 }
 ```
 
 ## What is Saved
 
-The custom element saves single id of selected media file as string value.
+The custom element saves JSON with selected media file as a string.
+
+Example: 
+
+```json
+{
+   "id":72627052,
+   "name":" [Example Video] Wistia Video Essentials",
+   "type":"Video",
+   "created":"2021-05-04T07:48:43+00:00",
+   "updated":"2021-05-04T13:49:00+00:00",
+   "duration":214.882,
+   "hashed_id":"zjj3nsgyud",
+   "description":"",
+   "progress":1.0,
+   "status":"ready",
+   "thumbnail":{
+      "url":"https://embed-ssl.wistia.com/deliveries/da5c32cfe2d73b62db603d73cd54164e.jpg?image_crop_resized=200x120",
+      "width":200,
+      "height":120
+   },
+   "project":{
+      "id":5883712,
+      "name":"Richards's first project",
+      "hashed_id":"7zn7cu096m"
+   },
+   "assets":[
+      {
+         "url":"http://embed.wistia.com/deliveries/933fdcdf0d6e606d4c6cf5d8704e7ad9.bin",
+         "width":1920,
+         "height":1080,
+         "fileSize":397431776,
+         "contentType":"video/mp4",
+         "type":"OriginalFile"
+      },
+      {
+         "url":"http://embed.wistia.com/deliveries/da5c32cfe2d73b62db603d73cd54164e.bin",
+         "width":960,
+         "height":540,
+         "fileSize":502852,
+         "contentType":"image/png",
+         "type":"StillImageFile"
+      }
+   ],
+   "transcript":{
+      "videoId":"6bedf9f1-d2c0-4873-aded-4deef17fdb27"
+   },
+   "embedCode":"<EMBED CODE>"
+}
+
+```
 
 ## Development
 

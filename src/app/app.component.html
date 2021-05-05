@@ -99,6 +99,10 @@
                                 <h3>Current video</h3>
                             </div>
 
+                            <div class="push-top" *ngIf="selectedVideoEditUrl">
+                                <a [href]="selectedVideoEditUrl" target="_blank">Edit in Wistia</a>
+                            </div>
+
                             <div class="push-top">
                                 <ng-template
                                     [ngTemplateOutletContext]="{ videos: [selectedVideo] }"

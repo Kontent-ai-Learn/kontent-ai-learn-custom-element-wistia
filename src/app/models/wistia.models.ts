@@ -5,9 +5,21 @@ export interface IWistiaProject {
     mediaCount: number;
 }
 
+export interface IWistiaVideoAsset {
+    url: string;
+    width: number;
+    height: number;
+    fileSize: number;
+    contentType: string;
+    type: string;
+}
+
 export interface IWistiaVideo {
     id: number;
+    hashed_id: string;
     name: string;
+    progress: number;
+    status: string;
     description?: string;
     created: string;
     updated: string;
@@ -22,6 +34,7 @@ export interface IWistiaVideo {
         id: string;
         name: string;
     };
+    assets: IWistiaVideoAsset[];
 }
 
 export interface IWistiaVideosResponse {

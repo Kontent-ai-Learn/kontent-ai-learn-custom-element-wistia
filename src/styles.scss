@@ -82,6 +82,7 @@ a {
     letter-spacing: 0.1ch;
     text-transform: uppercase;
     cursor: pointer;
+    text-decoration: none;
 
     &:hover {
         color: $linkColorHover;

@@ -10,6 +10,10 @@ export type WistiaAction = 'projects' | 'medias';
 export class WistiaService {
     constructor(private httpClient: HttpClient) {}
 
+    getVideoEditUrl(subdomain: string, video: IWistiaVideo): string {
+        return `https://${subdomain}.wistia.com/medias/${video.hashed_id}`;
+    }
+
     listProjects(accessToken: string): Observable<IWistiaProject[]> {
         return this.httpClient.get<IWistiaProject[]>(this.getUrl('projects', accessToken)).pipe(
             map((response) => {

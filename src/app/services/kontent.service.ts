@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { IWistiaVideo } from '../models/wistia.models';
 
 declare const CustomElement: any;
 
 interface IElementInit {
-    value: string;
     isDisabled: boolean;
+    value?: IWistiaVideo;
     accessToken?: string;
+    subdomain?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -24,9 +26,10 @@ export class KontentService {
                 });
 
                 onInit({
-                    value: element.value,
+                    value: element.value ? this.parseExistingValue(element.value) : undefined,
                     isDisabled: element.disabled,
-                    accessToken: element.config.wistiaAccessToken
+                    accessToken: element.config.wistiaAccessToken,
+                    subdomain: element.config.wistiaSubdomain
                 });
 
                 this.initialized = true;
@@ -36,15 +39,23 @@ export class KontentService {
         }
     }
 
-    setValue(value?: string): void {
+    setValue(value?: IWistiaVideo): void {
         if (this.initialized) {
-            CustomElement.setValue(value ?? null);
+            CustomElement.setValue(value ? JSON.stringify(value) : null);
         }
     }
 
     updateSizeToMatchHtml(height: number): void {
         if (this.initialized) {
             CustomElement.setHeight(height);
+        }
+    }
+
+    private parseExistingValue(value: any): IWistiaVideo {
+        try {
+            return JSON.parse(value);
+        } catch (err) {
+            throw new Error(`Could not parse element value`);
         }
     }
 }
