@@ -7,7 +7,7 @@
 
 <p align="center">
 <image src="docs/kontent.webp" alt="kontent logo" width="150" />
-<image style="margin-left:24px" src="docs/wistia.png" 
+<image src="docs/wistia.png" 
 alt="wistia logo" width="300">
 </p>
 
