@@ -271,7 +271,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         super.subscribeToObservable(
             this.wistiaService.listProjects(accessToken).pipe(
                 switchMap((projects) => {
-                    this.projects = projects.sort((b, a) => {
+                    this.projects = projects.sort((a, b) => {
                         if (a.name < b.name) {
                             return -1;
                         }
