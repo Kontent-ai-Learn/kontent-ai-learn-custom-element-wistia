@@ -54,11 +54,6 @@
                 <div *ngIf="showUploader" class="push-top uploader-wrapper">
                     <a (click)="handleHideUploader()">Back to listing</a>
                     <div class="uploader push-top" [id]="dropInElementId"></div>
-                    <div class="push-top" *ngIf="uploadedVideoId">
-                        <span (click)="setUploadFileAsUploaded(uploadedVideoId)" class="primary-button">
-                            Set as field value
-                        </span>
-                    </div>
                 </div>
 
                 <div class="push-top" *ngIf="!showUploader && selectedProject">

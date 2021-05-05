@@ -31,7 +31,6 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
     // uploader
     public showUploader: boolean = false;
-    public uploadedVideoId?: string;
 
     // projects
     public projects: IWistiaProject[] = [];
@@ -106,7 +105,6 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
     handleHideUploader(): void {
         this.showUploader = false;
-        this.uploadedVideoId = undefined;
     }
 
     handleShowUploader(): void {
@@ -262,8 +260,8 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
             (window as any).wistiaUploader = uploader;
 
             uploader.bind('uploadsuccess', (file: any, media: any) => {
-                this.uploadedVideoId = file.id;
-                super.detectChanges();
+                // reload projects as the number of files changed
+                this.initProjects(accessToken);
             });
         });
     }
