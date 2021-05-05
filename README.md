@@ -17,6 +17,7 @@ alt="wistia logo" width="300">
   <a href="#quick-deploy">Deploy</a> •
   <a href="#configuration">Configuration</a> •
   <a href="#what-is-saved">Saved value</a> •
+  <a href="#development">Development</a>
   <a href="#contributors">Contributors</a> •
   <a href="#license">License</a> •
   <a href="#additional-resources">Resources</a>
@@ -55,6 +56,10 @@ You will need to add the custom element to a content type filling in the hosted 
 ## What is Saved
 
 The custom element saves single id of selected media file as string value.
+
+## Development
+
+This custom element is built with `Angular`. See package.json for scripts regarding building & publishing the library.
 
 ## Contributors
 
