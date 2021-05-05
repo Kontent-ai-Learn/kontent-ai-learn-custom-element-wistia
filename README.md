@@ -17,7 +17,7 @@ alt="wistia logo" width="300">
   <a href="#quick-deploy">Deploy</a> •
   <a href="#configuration">Configuration</a> •
   <a href="#what-is-saved">Saved value</a> •
-  <a href="#development">Development</a>
+  <a href="#development">Development</a> •
   <a href="#contributors">Contributors</a> •
   <a href="#license">License</a> •
   <a href="#additional-resources">Resources</a>
