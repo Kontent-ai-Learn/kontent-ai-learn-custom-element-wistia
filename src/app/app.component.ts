@@ -16,7 +16,6 @@ import { WistiaService } from './services/wistia.service';
 })
 export class AppComponent extends CoreComponent implements OnInit, AfterViewChecked {
     // readonly setup
-    private readonly hideSelectedVideo: boolean = true;
     private readonly pageSize: number = 9;
 
     public readonly wistiaTokenVariable: string = 'wistiaAccessToken';
@@ -59,14 +58,6 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         }
 
         return this.wistiaService.getVideoEditUrl(this.wistiaSubdomain, this.selectedVideo);
-    }
-
-    public get filteredVideos(): IWistiaVideo[] {
-        if (!this.hideSelectedVideo || !this.selectedVideo) {
-            return this.videos;
-        }
-
-        return this.videos.filter(m => m.id !== this.selectedVideo?.id);
     }
 
     constructor(private wistiaService: WistiaService, private kontentService: KontentService, cdr: ChangeDetectorRef) {

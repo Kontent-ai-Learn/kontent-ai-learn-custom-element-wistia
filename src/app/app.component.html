@@ -108,12 +108,10 @@
                                 >
                                 </ng-template>
                             </div>
-
-                            <div class="push-top push-bottom divider"></div>
                         </div>
 
-                        <div *ngIf="selectedProject">
-                            <div class="push-top">
+                        <div *ngIf="selectedProject && !selectedVideo">
+                            <div>
                                 <h3>Select video</h3>
                             </div>
 
@@ -131,7 +129,7 @@
                                 <div *ngIf="!videos.length" class="light-text">There are no videos</div>
                                 <ng-template
                                     *ngIf="videos.length"
-                                    [ngTemplateOutletContext]="{ videos: filteredVideos }"
+                                    [ngTemplateOutletContext]="{ videos: videos }"
                                     [ngTemplateOutlet]="videosTemplate"
                                 >
                                 </ng-template>
