@@ -117,7 +117,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         }
     }
 
-    handleHideUploader(): void {
+    handleBackToListing(): void {
         this.showUploader = false;
     }
 
@@ -141,7 +141,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         this.videos = [];
         this.videosPage = 1;
         this.currentSearch = undefined;
-        this.handleHideUploader();
+        this.showUploader = false;
     }
 
     handleSelectProject(project: IWistiaProject): void {
@@ -165,28 +165,6 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
     handleClearSelectedVideo(): void {
         this.setSelectedVideo(undefined);
-    }
-
-    setUploadFileAsUploaded(fileId: string) {
-        if (!this.accessToken) {
-            return;
-        }
-        super.subscribeToObservable(
-            this.wistiaService.videoInfo(this.accessToken, fileId).pipe(
-                map((video) => {
-                    const candidateProject = this.projects.find((m) => m.id === video.project.id);
-
-                    if (candidateProject) {
-                        this.selectedProject = candidateProject;
-                    }
-
-                    this.setSelectedVideo(video);
-
-                    this.handleHideUploader();
-                    super.detectChanges();
-                })
-            )
-        );
     }
 
     private setSelectedVideo(video: IWistiaVideo | undefined): void {
@@ -274,10 +252,27 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
             (window as any).wistiaUploader = uploader;
 
             uploader.bind('uploadsuccess', (file: any, media: any) => {
-                // reload projects as the number of files changed
-                this.initProjects(accessToken);
+                // reload videos & projects as the number of files changed
+                console.log('Upload successful', file, media);
+                this.reloadProjects();
+                this.reloadVideos();
             });
         });
+    }
+
+    private reloadProjects(): void {
+        if (this.accessToken) {
+            this.initProjects(this.accessToken);
+        }
+    }
+
+    private reloadVideos(): void {
+        if (!this.accessToken || !this.selectedProject) {
+            return;
+        }
+        this.videos = [];
+        this.videosPage = 1;
+        this.loadVideos(this.accessToken, this.selectedProject.id, this.pageSize, this.videosPage, this.currentSearch);
     }
 
     private initProjects(accessToken: string, currentVideoId?: string): void {
