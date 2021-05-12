@@ -80,8 +80,7 @@
                                             {{ project.mediaCount === 1 ? 'video' : 'videos' }}
                                         </div>
                                     </div>
-                                    <div class="light-text push-top" [innerHtml]="project.description">
-                                    </div>
+                                    <div class="light-text push-top" [innerHtml]="project.description"></div>
                                     <div class="push-top push-bottom-sm">
                                         <span (click)="handleSelectProject(project)" class="secondary-button">
                                             Select project
@@ -132,7 +131,7 @@
                                 <div *ngIf="!videos.length" class="light-text">There are no videos</div>
                                 <ng-template
                                     *ngIf="videos.length"
-                                    [ngTemplateOutletContext]="{ videos: videos }"
+                                    [ngTemplateOutletContext]="{ videos: filteredVideos }"
                                     [ngTemplateOutlet]="videosTemplate"
                                 >
                                 </ng-template>
@@ -153,46 +152,47 @@
 
 <ng-template #videosTemplate let-videos="videos">
     <div [libFlexRow]="true" [libFlexRowAlign]="'stretch'">
-        <div
-            libFlexColumn
-            [style.width]="'calc((100% / ' + videosPerRow + ') - ' + videosPerRowGap + ')'"
-            *ngFor="let video of videos"
-            [libFlexColumnAlign]="'top'"
-        >
-            <div class="card no-pad full-height">
-                <div class="pad">
-                    <div style="min-height: 38px" libLineClamp [clampLines]="2">
-                        {{ video.name }}
+        <ng-container *ngFor="let video of videos">
+            <div
+                libFlexColumn
+                [style.width]="'calc((100% / ' + videosPerRow + ') - ' + videosPerRowGap + ')'"
+                [libFlexColumnAlign]="'top'"
+            >
+                <div class="card no-pad full-height">
+                    <div class="pad">
+                        <div style="min-height: 38px" libLineClamp [clampLines]="2">
+                            {{ video.name }}
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <img [src]="video.thumbnail.url" [style.width]="'100%'" />
-                </div>
-                <div class="pad light-text" libFlexRow>
-                    <div libFlexColumn *ngIf="!isDisabled">
-                        <span
-                            *ngIf="video.id !== selectedVideo?.id"
-                            (click)="handleSelectVideo(video)"
-                            class="secondary-button"
-                        >
-                            Select video
-                        </span>
-                        <span
-                            *ngIf="video.id === selectedVideo?.id"
-                            (click)="handleClearSelectedVideo()"
-                            class="primary-button"
-                        >
-                            Clear
-                        </span>
+                    <div>
+                        <img [src]="video.thumbnail.url" [style.width]="'100%'" />
                     </div>
-                    <div libFlexColumn libFlexFill>
-                        {{ video.duration }}
-                    </div>
-                    <div libFlexColumn>
-                        {{ getVideoDate(video) }}
+                    <div class="pad light-text" libFlexRow>
+                        <div libFlexColumn *ngIf="!isDisabled">
+                            <span
+                                *ngIf="video.id !== selectedVideo?.id"
+                                (click)="handleSelectVideo(video)"
+                                class="secondary-button"
+                            >
+                                Select video
+                            </span>
+                            <span
+                                *ngIf="video.id === selectedVideo?.id"
+                                (click)="handleClearSelectedVideo()"
+                                class="primary-button"
+                            >
+                                Clear
+                            </span>
+                        </div>
+                        <div libFlexColumn libFlexFill>
+                            {{ video.duration }}
+                        </div>
+                        <div libFlexColumn>
+                            {{ getVideoDate(video) }}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </ng-container>
     </div>
 </ng-template>
