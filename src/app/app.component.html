@@ -15,7 +15,7 @@
             <div class="error-box">
                 Could not load existing file. It may have been deleted in Wistia. See console for more details.
             </div>
-            <div class="push-top">
+            <div class="push-top" *ngIf="!isDisabled">
                 <span (click)="handleClearSelectedVideo()" class="primary-button"> Clear current value </span>
             </div>
         </div>
