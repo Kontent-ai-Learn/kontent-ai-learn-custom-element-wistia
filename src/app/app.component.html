@@ -167,7 +167,24 @@
                             {{ video.name }}
                         </div>
                     </div>
-                    <div>
+                    <!-- Video preview -->
+                    <div *ngIf="videoPreviewType === 'video'">
+                        <div class="wistia_responsive_padding" style="padding: 56.25% 0 0 0; position: relative">
+                            <div
+                                class="wistia_responsive_wrapper"
+                                style="height: 100%; left: 0; position: absolute; top: 0; width: 100%"
+                            >
+                                <div
+                                    [ngClass]="getWistiaEmbedClassForVideo(video)" seo=false videoFoam=true
+                                    style="height: 100%; width: 100%"
+                                >
+                                    &nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                      <!-- Thumbnail preview -->
+                    <div *ngIf="videoPreviewType === 'thumbnail'">
                         <img [src]="video.thumbnail.url" [style.width]="'100%'" />
                     </div>
                     <div class="pad light-text" libFlexRow>

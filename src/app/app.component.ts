@@ -9,6 +9,8 @@ import { IWistiaProject, IWistiaVideo } from './models/wistia.models';
 import { KontentService } from './services/kontent.service';
 import { WistiaService } from './services/wistia.service';
 
+type VideoPreviewType = 'thumbnail' | 'video';
+
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -20,6 +22,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
     public readonly wistiaTokenVariable: string = 'wistiaAccessToken';
     public readonly dropInElementId: string = 'WistiaUploaderElem';
+    public readonly videoPreviewType: VideoPreviewType = 'video';
 
     // config
     public accessToken?: string;
@@ -176,6 +179,10 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         }
 
         return hhMMss;
+    }
+
+    getWistiaEmbedClassForVideo(video: IWistiaVideo): string {
+        return `wistia_embed wistia_async_${video.hashed_id}`;
     }
 
     private setSelectedVideo(video: IWistiaVideo | undefined): void {
