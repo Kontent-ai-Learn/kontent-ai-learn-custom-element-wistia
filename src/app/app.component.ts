@@ -168,6 +168,16 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         this.setSelectedVideo(undefined);
     }
 
+    formatVideoDuration(video: IWistiaVideo): string {
+        const hhMMss = new Date(video.duration * 1000).toISOString().substr(11, 8);
+
+        if (hhMMss.startsWith('00:')) {
+            return hhMMss.substr(3, hhMMss.length - 3);
+        }
+
+        return hhMMss;
+    }
+
     private setSelectedVideo(video: IWistiaVideo | undefined): void {
         this.selectedVideo = video;
 
