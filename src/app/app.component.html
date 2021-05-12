@@ -11,13 +11,18 @@
     </ng-template>
 
     <div *ngIf="accessToken; else invalidInputData">
-        <div *ngIf="showFileNotFoundError" class="error-box">
-            Could not load existing file. It may have been deleted. See console for more details.
+        <div *ngIf="showFileNotFoundError" class="push-bottom">
+            <div class="error-box">
+                Could not load existing file. It may have been deleted in Wistia. See console for more details.
+            </div>
+            <div class="push-top">
+                <span (click)="handleClearSelectedVideo()" class="primary-button"> Clear current value </span>
+            </div>
         </div>
 
         <div class="light-text" *ngIf="loading">Loading...</div>
 
-        <div *ngIf="!loading">
+        <div *ngIf="!loading && !showFileNotFoundError && !errorMessage">
             <div *ngIf="isDisabled">
                 <div *ngIf="selectedVideo">
                     <div>

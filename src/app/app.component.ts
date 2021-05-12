@@ -180,6 +180,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
     private setSelectedVideo(video: IWistiaVideo | undefined): void {
         this.selectedVideo = video;
+        this.showFileNotFoundError = false;
 
         if (this.isKontentContext()) {
             this.kontentService.setValue(video);
