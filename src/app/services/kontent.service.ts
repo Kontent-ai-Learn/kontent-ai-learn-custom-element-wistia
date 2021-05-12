@@ -9,7 +9,9 @@ interface IElementInit {
     value?: IWistiaVideo;
     accessToken?: string;
     subdomain?: string;
-    videoPreviewType: VideoPreviewType;
+    videoPreviewType?: VideoPreviewType;
+    videosPerRow?: number;
+    projectsPerRow?: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -31,7 +33,9 @@ export class KontentService {
                     isDisabled: element.disabled,
                     accessToken: element.config.wistiaAccessToken,
                     subdomain: element.config.wistiaSubdomain,
-                    videoPreviewType: this.mapVideoPreviewType(element.config.videoPreviewType)
+                    videoPreviewType: element.config.videoPreviewType ? this.mapVideoPreviewType(element.config.videoPreviewType) : undefined,
+                    videosPerRow: element.config.videosPerRow,
+                    projectsPerRow: element.config.projectsPerRow,
                 });
 
                 this.initialized = true;
@@ -53,9 +57,9 @@ export class KontentService {
         }
     }
 
-    private mapVideoPreviewType(value?: string): VideoPreviewType {
+    private mapVideoPreviewType(value?: string): VideoPreviewType | undefined {
         if (!value) {
-            return 'video';
+            return undefined;
         }
 
         if (value.toLowerCase() === <VideoPreviewType>('thumbnail')) {

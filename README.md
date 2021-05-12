@@ -51,7 +51,9 @@ You will need to add the custom element to a content type filling in the hosted 
 {
     "wistiaAccessToken": "<YOUR WISTIA ACCESS TOKEN>",
     "wistiaSubdomain": "<YOUR WISTIA SUBDOMAIN>",
-    "videoPreviewType": "video | thumbnail" // choose one
+    "videoPreviewType": "video | thumbnail", // choose one
+    "projectsPerRow": 3, // number of projects per row
+    "videosPerRow": 3, // number of videos per row
 }
 ```
 

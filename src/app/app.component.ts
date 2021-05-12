@@ -25,6 +25,8 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
     public accessToken?: string;
     public wistiaSubdomain?: string;
     public videoPreviewType: VideoPreviewType = 'video';
+    public videosPerRow: number = 3;
+    public projectsPerRow: number = 3;
 
     // base
     public loading: boolean = true;
@@ -38,13 +40,11 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
     // projects
     public projects: IWistiaProject[] = [];
     public selectedProject?: IWistiaProject;
-    public projectsPerRow: number = 3;
     public projectsPerRowGap: string = '24px';
 
     // videos
     public showFileNotFoundError: boolean = false;
     public showFileNotSelected: boolean = false;
-    public videosPerRow: number = 3;
     public videosPerRowGap: string = '24px';
     public showLoadMoreVideos: boolean = false;
     public selectedVideo?: IWistiaVideo;
@@ -76,7 +76,18 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
                         this.accessToken = data.accessToken;
                         this.wistiaSubdomain = data.subdomain;
                         this.isDisabled = data.isDisabled;
-                        this.videoPreviewType = data.videoPreviewType;
+
+                        if (data.videoPreviewType) {
+                            this.videoPreviewType = data.videoPreviewType;
+                        }
+
+                        if (data.projectsPerRow) {
+                            this.projectsPerRow = +data.projectsPerRow;
+                        }
+
+                        if (data.videosPerRow) {
+                            this.videosPerRow = +data.videosPerRow;
+                        }
 
                         this.initialized = true;
 
