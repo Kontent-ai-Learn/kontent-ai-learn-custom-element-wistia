@@ -80,8 +80,7 @@
                                             {{ project.mediaCount === 1 ? 'video' : 'videos' }}
                                         </div>
                                     </div>
-                                    <div class="light-text push-top">
-                                        {{ project.description }}
+                                    <div class="light-text push-top" [innerHtml]="project.description">
                                     </div>
                                     <div class="push-top push-bottom-sm">
                                         <span (click)="handleSelectProject(project)" class="secondary-button">
