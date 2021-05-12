@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { IWistiaVideo } from '../models/wistia.models';
+import { IWistiaVideo, VideoPreviewType } from '../models/wistia.models';
 
 declare const CustomElement: any;
 
@@ -9,6 +9,7 @@ interface IElementInit {
     value?: IWistiaVideo;
     accessToken?: string;
     subdomain?: string;
+    videoPreviewType: VideoPreviewType;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -29,7 +30,8 @@ export class KontentService {
                     value: element.value ? this.parseExistingValue(element.value) : undefined,
                     isDisabled: element.disabled,
                     accessToken: element.config.wistiaAccessToken,
-                    subdomain: element.config.wistiaSubdomain
+                    subdomain: element.config.wistiaSubdomain,
+                    videoPreviewType: this.mapVideoPreviewType(element.config.videoPreviewType)
                 });
 
                 this.initialized = true;
@@ -49,6 +51,18 @@ export class KontentService {
         if (this.initialized) {
             CustomElement.setHeight(height);
         }
+    }
+
+    private mapVideoPreviewType(value?: string): VideoPreviewType {
+        if (!value) {
+            return 'video';
+        }
+
+        if (value.toLowerCase() === <VideoPreviewType>('thumbnail')) {
+            return 'thumbnail';
+        }
+
+        return 'video';
     }
 
     private parseExistingValue(value: any): IWistiaVideo {

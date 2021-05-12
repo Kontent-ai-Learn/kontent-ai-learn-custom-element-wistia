@@ -1,3 +1,5 @@
+export type VideoPreviewType = 'thumbnail' | 'video';
+
 export interface IWistiaProject {
     id: string;
     name: string;

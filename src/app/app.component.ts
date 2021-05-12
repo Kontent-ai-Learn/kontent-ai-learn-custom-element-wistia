@@ -5,11 +5,9 @@ import { of } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { CoreComponent } from './core/core.component';
-import { IWistiaProject, IWistiaVideo } from './models/wistia.models';
+import { IWistiaProject, IWistiaVideo, VideoPreviewType } from './models/wistia.models';
 import { KontentService } from './services/kontent.service';
 import { WistiaService } from './services/wistia.service';
-
-type VideoPreviewType = 'thumbnail' | 'video';
 
 @Component({
     selector: 'app-root',
@@ -22,11 +20,11 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
     public readonly wistiaTokenVariable: string = 'wistiaAccessToken';
     public readonly dropInElementId: string = 'WistiaUploaderElem';
-    public readonly videoPreviewType: VideoPreviewType = 'video';
 
     // config
     public accessToken?: string;
     public wistiaSubdomain?: string;
+    public videoPreviewType: VideoPreviewType = 'video';
 
     // base
     public loading: boolean = true;
@@ -78,6 +76,8 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
                         this.accessToken = data.accessToken;
                         this.wistiaSubdomain = data.subdomain;
                         this.isDisabled = data.isDisabled;
+                        this.videoPreviewType = data.videoPreviewType;
+
                         this.initialized = true;
 
                         super.detectChanges();
