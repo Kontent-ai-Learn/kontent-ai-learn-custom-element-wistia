@@ -31,7 +31,7 @@ This custom element for [Kentico Kontent](https://kontent.ai) allows users to up
     -   Select projects from Wistia
     -   Upload new files
     -   Search media files by name
-    -   Store media id in custom element as value
+    -   Store media file json as value (example output below)
 
 ## Demo
 
