@@ -61,6 +61,13 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         return this.wistiaService.getVideoEditUrl(this.wistiaSubdomain, this.selectedVideo);
     }
 
+    public get showProjectInformation(): boolean {
+        if (this.selectedVideo) {
+            return false;
+        }
+        return true;
+    }
+
     constructor(private wistiaService: WistiaService, private kontentService: KontentService, cdr: ChangeDetectorRef) {
         super(cdr);
     }

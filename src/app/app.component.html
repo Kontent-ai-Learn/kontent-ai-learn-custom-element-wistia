@@ -44,28 +44,30 @@
             </div>
 
             <div *ngIf="!isDisabled">
-                <div>
-                    <div libFlexRow>
-                        <div libFlexColumn libFlexFill>
-                            <h2 *ngIf="!selectedProject">Select project</h2>
-                            <h2 *ngIf="selectedProject">{{ selectedProject.name }}</h2>
-                        </div>
-                        <div libFlexColumn *ngIf="selectedProject">
-                            <a (click)="handleUnselectProject()">Change project</a>
+                <div *ngIf="showProjectInformation">
+                    <div>
+                        <div libFlexRow>
+                            <div libFlexColumn libFlexFill>
+                                <h2 *ngIf="!selectedProject">Select project</h2>
+                                <h2 *ngIf="selectedProject">{{ selectedProject.name }}</h2>
+                            </div>
+                            <div libFlexColumn *ngIf="selectedProject">
+                                <a (click)="handleUnselectProject()">Change project</a>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div *ngIf="showUploader" class="push-top uploader-wrapper">
-                    <a (click)="handleBackToListing()">Back to listing</a>
-                    <div class="uploader push-top" [id]="dropInElementId"></div>
-                </div>
+                    <div *ngIf="showUploader" class="push-top uploader-wrapper">
+                        <a (click)="handleBackToListing()">Back to listing</a>
+                        <div class="uploader push-top" [id]="dropInElementId"></div>
+                    </div>
 
-                <div class="push-top" *ngIf="!showUploader && selectedProject">
-                    <a (click)="handleShowUploader()">Upload video</a>
-                </div>
+                    <div class="push-top" *ngIf="!showUploader && selectedProject">
+                        <a (click)="handleShowUploader()">Upload video</a>
+                    </div>
 
-                <div *ngIf="!showUploader" class="push-top push-bottom divider"></div>
+                    <div *ngIf="!showUploader" class="push-top push-bottom divider"></div>
+                </div>
 
                 <div class="push-top" *ngIf="!showUploader">
                     <div>
@@ -175,7 +177,9 @@
                                 style="height: 100%; left: 0; position: absolute; top: 0; width: 100%"
                             >
                                 <div
-                                    [ngClass]="getWistiaEmbedClassForVideo(video)" seo=false videoFoam=true
+                                    [ngClass]="getWistiaEmbedClassForVideo(video)"
+                                    seo="false"
+                                    videoFoam="true"
                                     style="height: 100%; width: 100%"
                                 >
                                     &nbsp;
@@ -183,7 +187,7 @@
                             </div>
                         </div>
                     </div>
-                      <!-- Thumbnail preview -->
+                    <!-- Thumbnail preview -->
                     <div *ngIf="videoPreviewType === 'thumbnail'">
                         <img [src]="video.thumbnail.url" [style.width]="'100%'" />
                     </div>
