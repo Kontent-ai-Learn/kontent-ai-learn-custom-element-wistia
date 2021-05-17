@@ -20,15 +20,9 @@
             </div>
         </div>
 
-        <div class="light-text" *ngIf="loading">Loading...</div>
-
-        <div *ngIf="!loading && !showFileNotFoundError && !errorMessage">
+        <div *ngIf="!showFileNotFoundError && !errorMessage">
             <div *ngIf="isDisabled">
                 <div *ngIf="selectedVideo">
-                    <div>
-                        <h3>Current video</h3>
-                    </div>
-
                     <div class="push-top">
                         <ng-template
                             [ngTemplateOutletContext]="{ videos: [selectedVideo] }"
@@ -65,13 +59,11 @@
                     <div class="push-top" *ngIf="!showUploader && selectedProject">
                         <a (click)="handleShowUploader()">Upload video</a>
                     </div>
-
-                    <div *ngIf="!showUploader" class="push-top push-bottom divider"></div>
                 </div>
 
                 <div class="push-top" *ngIf="!showUploader">
                     <div>
-                        <div *ngIf="!selectedProject" [libFlexRow]="true" [libFlexRowAlign]="'stretch'">
+                        <div *ngIf="showProjectSelection" [libFlexRow]="true" [libFlexRowAlign]="'stretch'">
                             <div
                                 libFlexColumn
                                 [style.width]="'calc((100% / ' + projectsPerRow + ') - ' + projectsPerRowGap + ')'"
@@ -100,11 +92,7 @@
 
                     <div class="push-top">
                         <div *ngIf="selectedVideo">
-                            <div>
-                                <h3>Current video</h3>
-                            </div>
-
-                            <div class="push-top" *ngIf="selectedVideoEditUrl">
+                            <div *ngIf="selectedVideoEditUrl">
                                 <a [href]="selectedVideoEditUrl" target="_blank">Edit in Wistia</a>
                             </div>
 
@@ -119,10 +107,6 @@
 
                         <div *ngIf="selectedProject && !selectedVideo">
                             <div>
-                                <h3>Select video</h3>
-                            </div>
-
-                            <div class="push-top">
                                 <input
                                     [placeholder]="'Video name (exact match only)'"
                                     class="search-input"
@@ -133,7 +117,7 @@
                             </div>
 
                             <div class="push-top">
-                                <div *ngIf="!videos.length" class="light-text">There are no videos</div>
+                                <div *ngIf="!videos.length" class="info-box">There are no videos</div>
                                 <ng-template
                                     *ngIf="videos.length"
                                     [ngTemplateOutletContext]="{ videos: videos }"

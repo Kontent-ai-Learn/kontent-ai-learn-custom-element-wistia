@@ -1,7 +1,7 @@
 import { AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { CoreComponent } from './core/core.component';
@@ -23,7 +23,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
     // config
     public accessToken?: string;
-    public wistiaSubdomain?: string;
+    public wistiaSubdomain?: string = 'xxx';
     public videoPreviewType: VideoPreviewType = 'video';
     public videosPerRow: number = 3;
     public projectsPerRow: number = 3;
@@ -68,6 +68,13 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         return true;
     }
 
+    public get showProjectSelection(): boolean {
+        if (!this.selectedProject && !this.selectedVideo) {
+            return true;
+        }
+        return false;
+    }
+
     constructor(private wistiaService: WistiaService, private kontentService: KontentService, cdr: ChangeDetectorRef) {
         super(cdr);
     }
@@ -100,7 +107,11 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
                         super.detectChanges();
 
-                        this.initProjects(data.accessToken, data.value?.hashed_id);
+                        const currentVideoId = data.value?.hashed_id;
+
+                        if (currentVideoId) {
+                            super.subscribeToObservable(this.initVideoObs(data.accessToken, currentVideoId));
+                        }
                     }
                 },
                 (error) => {
@@ -117,7 +128,13 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
             this.initialized = true;
 
             if (this.accessToken) {
-                this.initProjects(this.accessToken, this.getDefaultFileId());
+                const defaultVideoId = this.getDefaultFileId();
+
+                if (defaultVideoId) {
+                    super.subscribeToObservable(this.initVideoObs(this.accessToken, defaultVideoId));
+                } else {
+                    super.subscribeToObservable(this.initProjectsObs(this.accessToken, this.selectedProject?.id));
+                }
             } else {
                 this.loading = false;
             }
@@ -206,9 +223,14 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
     private setSelectedVideo(video: IWistiaVideo | undefined): void {
         this.selectedVideo = video;
         this.showFileNotFoundError = false;
+        this.selectedProject = undefined;
 
         if (this.isKontentContext()) {
             this.kontentService.setValue(video);
+        }
+
+        if (this.accessToken) {
+            super.subscribeToObservable(this.initProjectsObs(this.accessToken));
         }
     }
 
@@ -299,7 +321,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
     private reloadProjects(): void {
         if (this.accessToken) {
-            this.initProjects(this.accessToken);
+            super.subscribeToObservable(this.initProjectsObs(this.accessToken, this.selectedProject?.id));
         }
     }
 
@@ -312,72 +334,56 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         this.loadVideos(this.accessToken, this.selectedProject.id, this.pageSize, this.videosPage, this.currentSearch);
     }
 
-    private initProjects(accessToken: string, currentVideoId?: string): void {
-        this.loading = true;
-        super.subscribeToObservable(
-            this.wistiaService.listProjects(accessToken).pipe(
-                switchMap((projects) => {
-                    this.projects = projects.sort((a, b) => {
-                        if (a.name < b.name) {
-                            return -1;
-                        }
-                        if (a.name > b.name) {
-                            return 1;
-                        }
-                        return 0;
-                    });
+    private initVideoObs(accessToken: string, videoId: string): Observable<void> {
+        return this.wistiaService.videoInfo(accessToken, videoId).pipe(
+            map((video) => {
+                this.selectedVideo = video;
 
-                    if (!currentVideoId) {
-                        return of(undefined);
+                super.detectChanges();
+            }),
+            catchError((error) => {
+                this.showFileNotFoundError = true;
+                console.warn(`Could not load video with id '${videoId}'`);
+                console.error(error);
+
+                super.detectChanges();
+
+                return of(undefined);
+            })
+        );
+    }
+
+    private initProjectsObs(accessToken: string, selectedProjectId?: string): Observable<void> {
+        return this.wistiaService.listProjects(accessToken).pipe(
+            map((projects) => {
+                this.projects = projects.sort((a, b) => {
+                    if (a.name < b.name) {
+                        return -1;
                     }
-
-                    return this.wistiaService.videoInfo(accessToken, currentVideoId).pipe(
-                        map((video) => {
-                            const candidateProject = this.projects.find((m) => m.id === video.project.id);
-
-                            if (candidateProject) {
-                                this.selectedProject = candidateProject;
-                            }
-
-                            this.selectedVideo = video;
-
-                            return video;
-                        }),
-                        catchError((error) => {
-                            this.showFileNotFoundError = true;
-                            console.warn(`Could not load file with id '${currentVideoId}'`);
-                            console.error(error);
-
-                            return of(undefined);
-                        })
-                    );
-                }),
-                switchMap((video) => {
-                    if (video) {
-                        // init media from the same project as is video
-                        return this.wistiaService
-                            .listVideos(
-                                accessToken,
-                                video.project.id,
-                                this.pageSize,
-                                this.videosPage,
-                                this.currentSearch
-                            )
-                            .pipe(
-                                map((videosResponse) => {
-                                    this.videos = videosResponse.videos;
-                                    this.showLoadMoreVideos = videosResponse.hasMoreItems;
-                                })
-                            );
+                    if (a.name > b.name) {
+                        return 1;
                     }
+                    return 0;
+                });
+            }),
+            switchMap(() => {
+                if (selectedProjectId) {
+                    // init media from the same project as is video
+                    return this.wistiaService
+                        .listVideos(accessToken, selectedProjectId, this.pageSize, this.videosPage, this.currentSearch)
+                        .pipe(
+                            map((videosResponse) => {
+                                this.videos = videosResponse.videos;
+                                this.showLoadMoreVideos = videosResponse.hasMoreItems;
+                            })
+                        );
+                }
 
-                    return of(undefined);
-                }),
-                map(() => {
-                    this.loading = false;
-                    super.detectChanges();
-                })
-            )
+                return of(undefined);
+            }),
+            map(() => {
+                super.detectChanges();
+            })
         );
     }
 
