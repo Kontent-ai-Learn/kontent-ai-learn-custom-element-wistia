@@ -25,7 +25,7 @@
                 <div *ngIf="selectedVideo">
                     <div class="push-top">
                         <ng-template
-                            [ngTemplateOutletContext]="{ videos: [selectedVideo] }"
+                            [ngTemplateOutletContext]="{ videos: [selectedVideo], isSelectedVideo: true }"
                             [ngTemplateOutlet]="videosTemplate"
                         >
                         </ng-template>
@@ -79,11 +79,13 @@
                                             {{ project.mediaCount === 1 ? 'video' : 'videos' }}
                                         </div>
                                     </div>
-                                    <div class="light-text push-top" [innerHtml]="project.description"></div>
-                                    <div class="push-top push-bottom-sm">
-                                        <span (click)="handleSelectProject(project)" class="secondary-button">
-                                            Select project
-                                        </span>
+                                    <div class="light-text push-top" libLineClamp [clampLines]="2" [innerHtml]="project.description"></div>
+                                    <div class="push-top push-bottom-sm" libFlexRow>
+                                        <div libFlexColumn (click)="handleSelectProject(project)" class="secondary-button" >
+                                            <div libLineClamp [clampLines]="1">
+                                                Select
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -175,21 +177,21 @@
                     <div *ngIf="videoPreviewType === 'thumbnail'">
                         <img [src]="video.thumbnail.url" [style.width]="'100%'" />
                     </div>
-                    <div class="pad light-text" libFlexRow>
+                    <div class="pad light-text" [libFlexRow]="true">
                         <div libFlexColumn *ngIf="!isDisabled">
                             <span
                                 *ngIf="video.id !== selectedVideo?.id"
                                 (click)="handleSelectVideo(video)"
                                 class="secondary-button"
                             >
-                                Select video
+                                Select
                             </span>
                             <span
                                 *ngIf="video.id === selectedVideo?.id"
                                 (click)="handleClearSelectedVideo()"
                                 class="primary-button"
                             >
-                                Clear
+                                Replace
                             </span>
                         </div>
                         <div libFlexColumn libFlexFill>
