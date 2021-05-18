@@ -222,6 +222,17 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         return `wistia_embed wistia_async_${video.hashed_id}`;
     }
 
+    getAvatarSourceName(project: IWistiaProject): string {
+        if (!project.name) {
+            return '';
+        }
+        if (project.name.length < 2) {
+            return project.name;
+        }
+
+        return project.name.substr(0, 2);
+    }
+
     private setSelectedVideo(video: IWistiaVideo | undefined): void {
         this.selectedVideo = video;
         this.showFileNotFoundError = false;
