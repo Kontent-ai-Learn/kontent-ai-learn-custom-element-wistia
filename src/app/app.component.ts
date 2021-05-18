@@ -111,6 +111,8 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
                         if (currentVideoId) {
                             super.subscribeToObservable(this.initVideoObs(data.accessToken, currentVideoId));
+                        } else {
+                            super.subscribeToObservable(this.initProjectsObs(data.accessToken));
                         }
                     }
                 },
