@@ -70,21 +70,32 @@
                                 *ngFor="let project of projects"
                             >
                                 <div class="card full-height">
-                                    <div libFlexRow>
+                                    <div libFlexRow [libFlexRowGap]="'16px'">
+                                        <div libFlexColumn>
+                                            <ngx-avatar [size]="40" [name]="project.name"></ngx-avatar>
+                                        </div>
                                         <div libFlexColumn libFlexFill>
                                             <h4 libLineClamp [clampLines]="2">{{ project.name }}</h4>
                                         </div>
-                                        <div libFlexColumn class="light-text">
-                                            {{ project.mediaCount }}
-                                            {{ project.mediaCount === 1 ? 'video' : 'videos' }}
-                                        </div>
                                     </div>
-                                    <div class="light-text push-top" libLineClamp [clampLines]="2" [innerHtml]="project.description"></div>
+                                    <div libFlexColumn class="push-top-sm light-text">
+                                        {{ project.mediaCount }}
+                                        {{ project.mediaCount === 1 ? 'video' : 'videos' }}
+                                    </div>
+                                    <div
+                                        *ngIf="project.description"
+                                        class="light-text push-top-sm"
+                                        libLineClamp
+                                        [clampLines]="2"
+                                        [innerHtml]="project.description"
+                                    ></div>
                                     <div class="push-top push-bottom-sm" libFlexRow>
-                                        <div libFlexColumn (click)="handleSelectProject(project)" class="secondary-button" >
-                                            <div libLineClamp [clampLines]="1">
-                                                Select
-                                            </div>
+                                        <div
+                                            libFlexColumn
+                                            (click)="handleSelectProject(project)"
+                                            class="secondary-button"
+                                        >
+                                            <div libLineClamp [clampLines]="1">Select</div>
                                         </div>
                                     </div>
                                 </div>
