@@ -1,3 +1,10 @@
+<mat-menu #sortMenu="matMenu">
+    <button mat-menu-item (click)="handleSort(sortItem)" *ngFor="let sortItem of sortItems">
+        <mat-icon>{{ sortItem.matIcon }}</mat-icon>
+        <span>{{ sortItem.title }}</span>
+    </button>
+</mat-menu>
+
 <div *ngIf="initialized" class="pad-bottom-md">
     <div *ngIf="errorMessage" class="error-box push-bottom">
         {{ errorMessage }}
@@ -119,18 +126,49 @@
                         </div>
 
                         <div *ngIf="selectedProject && !selectedVideo">
-                            <div>
-                                <input
-                                    [placeholder]="'Video name (exact match only)'"
-                                    class="search-input"
-                                    type="search"
-                                    autocomplete="off"
-                                    [formControl]="searchControl"
-                                />
+                            <div libFlexRow>
+                                <div libFlexColumn libFlexFill>
+                                    <input
+                                        [placeholder]="'Video name (exact match only)'"
+                                        class="search-input"
+                                        type="search"
+                                        autocomplete="off"
+                                        [formControl]="searchControl"
+                                    />
+                                </div>
+                                <div libFlexColumn>
+                                    <div libFlexRow [libFlexRowGap]="'8px'">
+                                        <div libFlexColumn>
+                                            <button
+                                                class="w-cursor-pointer"
+                                                mat-icon-button
+                                                [matMenuTriggerFor]="sortMenu"
+                                            >
+                                                <mat-icon style="margin-top: 4px">{{
+                                                    currentSort.sortDirection === 'asc'
+                                                        ? 'arrow_upward'
+                                                        : 'arrow_downward'
+                                                }}</mat-icon>
+                                            </button>
+                                        </div>
+                                        <div libFlexColumn class="w-cursor-pointer" [matMenuTriggerFor]="sortMenu">
+                                            {{ currentSort.title }}
+                                        </div>
+                                        <div libFlexColumn>
+                                            <button
+                                                class="w-cursor-pointer"
+                                                mat-icon-button
+                                                [matMenuTriggerFor]="sortMenu"
+                                            >
+                                                <mat-icon style="margin-top: 4px">{{ currentSort.matIcon }}</mat-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="push-top">
-                                <div *ngIf="!videos.length" class="info-box">There are no videos</div>
+                                <div *ngIf="showNoVideosNote" class="info-box">There are no videos</div>
                                 <ng-template
                                     *ngIf="videos.length"
                                     [ngTemplateOutletContext]="{ videos: videos }"

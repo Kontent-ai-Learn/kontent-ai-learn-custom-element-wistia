@@ -7,7 +7,14 @@ import { environment } from 'src/environments/environment';
 import { CoreComponent } from './core/core.component';
 import { IWistiaProject, IWistiaVideo, VideoPreviewType } from './models/wistia.models';
 import { KontentService } from './services/kontent.service';
-import { WistiaService } from './services/wistia.service';
+import { WistiaService, WistiaSort, WistiaSortDirection } from './services/wistia.service';
+
+interface ISortItem {
+    title: string;
+    sortDirection: WistiaSortDirection;
+    sort: WistiaSort;
+    matIcon: string;
+}
 
 @Component({
     selector: 'app-root',
@@ -34,6 +41,46 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
     public initialized: boolean = false;
     public errorMessage?: string;
 
+    // sort items
+    public sortItems: ISortItem[] = [
+        {
+            title: 'Name asc',
+            sort: 'name',
+            sortDirection: 'asc',
+            matIcon: 'sort_by_alpha'
+        },
+        {
+            title: 'Name desc',
+            sort: 'name',
+            sortDirection: 'desc',
+            matIcon: 'sort_by_alpha'
+        },
+        {
+            title: 'Created asc',
+            sort: 'created',
+            sortDirection: 'asc',
+            matIcon: 'date_range'
+        },
+        {
+            title: 'Created desc',
+            sort: 'created',
+            sortDirection: 'desc',
+            matIcon: 'date_range'
+        },
+        {
+            title: 'Updated asc',
+            sort: 'updated',
+            sortDirection: 'asc',
+            matIcon: 'history'
+        },
+        {
+            title: 'Updated desc',
+            sort: 'updated',
+            sortDirection: 'desc',
+            matIcon: 'history'
+        }
+    ];
+
     // uploader
     public showUploader: boolean = false;
 
@@ -50,8 +97,11 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
     public selectedVideo?: IWistiaVideo;
     public videosPage: number = 1;
     public videos: IWistiaVideo[] = [];
+    public currentSort: ISortItem = this.sortItems[0];
     public currentSearch?: string;
     public searchControl: FormControl = new FormControl();
+
+    public showNoVideosNote: boolean = false;
 
     public get selectedVideoEditUrl(): string | undefined {
         if (!this.selectedVideo || !this.wistiaSubdomain) {
@@ -174,7 +224,15 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
             return;
         }
         this.videosPage++;
-        this.loadVideos(this.accessToken, this.selectedProject.id, this.pageSize, this.videosPage, this.currentSearch);
+        this.loadVideos(
+            this.accessToken,
+            this.selectedProject.id,
+            this.pageSize,
+            this.videosPage,
+            this.currentSort.sort,
+            this.currentSort.sortDirection,
+            this.currentSearch
+        );
     }
 
     handleUnselectProject(): void {
@@ -193,7 +251,15 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         this.videos = [];
         this.videosPage = 1;
 
-        this.loadVideos(this.accessToken, project.id, this.pageSize, this.videosPage, this.currentSearch);
+        this.loadVideos(
+            this.accessToken,
+            project.id,
+            this.pageSize,
+            this.videosPage,
+            this.currentSort.sort,
+            this.currentSort.sortDirection,
+            this.currentSearch
+        );
     }
 
     handleSelectVideo(video: IWistiaVideo): void {
@@ -231,6 +297,27 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         }
 
         return project.name.substr(0, 2);
+    }
+
+    handleSort(sort: ISortItem): void {
+        this.currentSort = sort;
+
+        if (!this.accessToken || !this.selectedProject) {
+            return;
+        }
+
+        this.videosPage = 1;
+        this.videos = [];
+
+        this.loadVideos(
+            this.accessToken,
+            this.selectedProject.id,
+            this.pageSize,
+            this.videosPage,
+            this.currentSort.sort,
+            this.currentSort.sortDirection,
+            this.currentSearch
+        );
     }
 
     private setSelectedVideo(video: IWistiaVideo | undefined): void {
@@ -273,6 +360,8 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
                                 this.selectedProject.id,
                                 this.pageSize,
                                 this.videosPage,
+                                this.currentSort.sort,
+                                this.currentSort.sortDirection,
                                 this.currentSearch
                             )
                             .pipe(
@@ -298,13 +387,21 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         projectId: string,
         pageSize: number,
         page: number,
+        sort: WistiaSort,
+        sortDirection: WistiaSortDirection,
         search: string | undefined
     ): void {
         super.subscribeToObservable(
-            this.wistiaService.listVideos(accessToken, projectId, pageSize, page, search).pipe(
+            this.wistiaService.listVideos(accessToken, projectId, pageSize, page, sort, sortDirection, search).pipe(
                 map((videosResponse) => {
                     this.videos.push(...videosResponse.videos);
                     this.showLoadMoreVideos = videosResponse.hasMoreItems;
+
+                    if (page === 1 && videosResponse.videos.length === 0) {
+                        this.showNoVideosNote = true;
+                    } else {
+                        this.showNoVideosNote = false;
+                    }
 
                     super.detectChanges();
                 })
@@ -344,7 +441,15 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
         }
         this.videos = [];
         this.videosPage = 1;
-        this.loadVideos(this.accessToken, this.selectedProject.id, this.pageSize, this.videosPage, this.currentSearch);
+        this.loadVideos(
+            this.accessToken,
+            this.selectedProject.id,
+            this.pageSize,
+            this.videosPage,
+            this.currentSort.sort,
+            this.currentSort.sortDirection,
+            this.currentSearch
+        );
     }
 
     private initVideoObs(accessToken: string, videoId: string): Observable<void> {
@@ -383,7 +488,15 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
                 if (selectedProjectId) {
                     // init media from the same project as is video
                     return this.wistiaService
-                        .listVideos(accessToken, selectedProjectId, this.pageSize, this.videosPage, this.currentSearch)
+                        .listVideos(
+                            accessToken,
+                            selectedProjectId,
+                            this.pageSize,
+                            this.videosPage,
+                            this.currentSort.sort,
+                            this.currentSort.sortDirection,
+                            this.currentSearch
+                        )
                         .pipe(
                             map((videosResponse) => {
                                 this.videos = videosResponse.videos;

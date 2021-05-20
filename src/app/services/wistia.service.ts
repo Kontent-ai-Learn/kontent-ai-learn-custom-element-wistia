@@ -6,6 +6,9 @@ import { IWistiaProject, IWistiaVideo, IWistiaVideosResponse } from '../models/w
 
 export type WistiaAction = 'projects' | 'medias';
 
+export type WistiaSort = 'name' | 'updated' | 'created';
+export type WistiaSortDirection = 'asc' | 'desc';
+
 @Injectable({ providedIn: 'root' })
 export class WistiaService {
     constructor(private httpClient: HttpClient) {}
@@ -35,13 +38,15 @@ export class WistiaService {
         projectId: string,
         pageSize: number,
         page: number,
+        sort: WistiaSort,
+        sortDirection: WistiaSortDirection,
         search?: string
     ): Observable<IWistiaVideosResponse> {
         const newPageSize = pageSize++;
         let url = `${this.getUrl(
             'medias',
             accessToken
-        )}&project_id=${projectId}&type=video&sort_by=updated&page=${page}&per_page=${newPageSize}`;
+        )}&project_id=${projectId}&type=video&sort_by=${sort}&sort_direction=${sortDirection === 'asc' ? 1 : 0}&page=${page}&per_page=${newPageSize}`;
 
         if (search) {
             url += `&name=${search}`;
