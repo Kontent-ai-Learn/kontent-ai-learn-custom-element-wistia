@@ -10,8 +10,9 @@ interface IElementInit {
     accessToken?: string;
     subdomain?: string;
     videoPreviewType?: VideoPreviewType;
-    videosPerRow?: number;
-    projectsPerRow?: number;
+    videosPerRow?: string;
+    projectsPerRow?: string;
+    pageSize?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -36,6 +37,7 @@ export class KontentService {
                     videoPreviewType: element.config.videoPreviewType ? this.mapVideoPreviewType(element.config.videoPreviewType) : undefined,
                     videosPerRow: element.config.videosPerRow,
                     projectsPerRow: element.config.projectsPerRow,
+                    pageSize: element.config.pageSize,
                 });
 
                 this.initialized = true;

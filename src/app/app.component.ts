@@ -22,9 +22,6 @@ interface ISortItem {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent extends CoreComponent implements OnInit, AfterViewChecked {
-    // readonly setup
-    private readonly pageSize: number = 9;
-
     public readonly wistiaTokenVariable: string = 'wistiaAccessToken';
     public readonly dropInElementId: string = 'WistiaUploaderElem';
 
@@ -34,6 +31,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
     public videoPreviewType: VideoPreviewType = 'video';
     public videosPerRow: number = 3;
     public projectsPerRow: number = 3;
+    private pageSize: number = 9;
 
     // base
     public loading: boolean = true;
@@ -151,6 +149,10 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
 
                         if (data.videosPerRow) {
                             this.videosPerRow = +data.videosPerRow;
+                        }
+
+                        if (data.pageSize) {
+                            this.pageSize = +data.pageSize;
                         }
 
                         this.initialized = true;
