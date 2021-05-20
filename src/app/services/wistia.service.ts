@@ -42,7 +42,7 @@ export class WistiaService {
         sortDirection: WistiaSortDirection,
         search?: string
     ): Observable<IWistiaVideosResponse> {
-        const newPageSize = pageSize++;
+        const newPageSize = pageSize + 1;
         let url = `${this.getUrl(
             'medias',
             accessToken
