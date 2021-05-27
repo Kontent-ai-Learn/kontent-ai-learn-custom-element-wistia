@@ -92,6 +92,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
     public showFileNotSelected: boolean = false;
     public videosPerRowGap: string = '24px';
     public showLoadMoreVideos: boolean = false;
+    public showAllVideosLoaded: boolean = false;
     public selectedVideo?: IWistiaVideo;
     public videosPage: number = 1;
     public videos: IWistiaVideo[] = [];
@@ -369,7 +370,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
                             .pipe(
                                 map((videosResponse) => {
                                     this.videos = videosResponse.videos;
-                                    this.showLoadMoreVideos = videosResponse.hasMoreItems;
+                                    this.showLoadMoreVideos = videosResponse.videos.length > 0;
                                     super.detectChanges();
                                 })
                             );
@@ -397,7 +398,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
             this.wistiaService.listVideos(accessToken, projectId, pageSize, page, sort, sortDirection, search).pipe(
                 map((videosResponse) => {
                     this.videos.push(...videosResponse.videos);
-                    this.showLoadMoreVideos = videosResponse.hasMoreItems;
+                    this.showLoadMoreVideos = videosResponse.videos.length > 0;
 
                     if (page === 1 && videosResponse.videos.length === 0) {
                         this.showNoVideosNote = true;
@@ -502,7 +503,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
                         .pipe(
                             map((videosResponse) => {
                                 this.videos = videosResponse.videos;
-                                this.showLoadMoreVideos = videosResponse.hasMoreItems;
+                                this.showLoadMoreVideos = videosResponse.videos.length > 0;
                             })
                         );
                 }

@@ -42,11 +42,12 @@ export class WistiaService {
         sortDirection: WistiaSortDirection,
         search?: string
     ): Observable<IWistiaVideosResponse> {
-        const newPageSize = pageSize + 1;
         let url = `${this.getUrl(
             'medias',
             accessToken
-        )}&project_id=${projectId}&type=video&sort_by=${sort}&sort_direction=${sortDirection === 'asc' ? 1 : 0}&page=${page}&per_page=${newPageSize}`;
+        )}&project_id=${projectId}&type=video&sort_by=${sort}&sort_direction=${
+            sortDirection === 'asc' ? 1 : 0
+        }&page=${page}&per_page=${pageSize}`;
 
         if (search) {
             url += `&name=${search}`;
@@ -54,14 +55,7 @@ export class WistiaService {
 
         return this.httpClient.get<IWistiaVideo[]>(url).pipe(
             map((response) => {
-                const hasMoreItems = response.length === newPageSize;
-                // remove last elem from response
-                if (hasMoreItems) {
-                    response.pop();
-                }
-
                 const videoResponse: IWistiaVideosResponse = {
-                    hasMoreItems: hasMoreItems,
                     videos: response
                 };
 

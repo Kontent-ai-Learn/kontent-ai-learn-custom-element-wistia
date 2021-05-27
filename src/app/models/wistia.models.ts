@@ -40,6 +40,5 @@ export interface IWistiaVideo {
 }
 
 export interface IWistiaVideosResponse {
-    hasMoreItems: boolean;
     videos: IWistiaVideo[];
 }
