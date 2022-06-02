@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -18,19 +18,27 @@ export class WistiaService {
     }
 
     listProjects(accessToken: string): Observable<IWistiaProject[]> {
-        return this.httpClient.get<IWistiaProject[]>(this.getUrl('projects', accessToken)).pipe(
-            map((response) => {
-                return response;
+        return this.httpClient
+            .get<IWistiaProject[]>(this.getUrl('projects'), {
+                headers: this.getHeaders(accessToken)
             })
-        );
+            .pipe(
+                map((response) => {
+                    return response;
+                })
+            );
     }
 
     videoInfo(accessToken: string, videoId: string): Observable<IWistiaVideo> {
-        return this.httpClient.get<IWistiaVideo>(`${this.getUrl('medias', accessToken, `/${videoId}`)}`).pipe(
-            map((response) => {
-                return response;
+        return this.httpClient
+            .get<IWistiaVideo>(`${this.getUrl('medias', `/${videoId}`)}`, {
+                headers: this.getHeaders(accessToken)
             })
-        );
+            .pipe(
+                map((response) => {
+                    return response;
+                })
+            );
     }
 
     listVideos(
@@ -44,8 +52,7 @@ export class WistiaService {
     ): Observable<IWistiaVideosResponse> {
         let url = `${this.getUrl(
             'medias',
-            accessToken
-        )}&project_id=${projectId}&type=video&sort_by=${sort}&sort_direction=${
+        )}?project_id=${projectId}&type=video&sort_by=${sort}&sort_direction=${
             sortDirection === 'asc' ? 1 : 0
         }&page=${page}&per_page=${pageSize}`;
 
@@ -53,20 +60,32 @@ export class WistiaService {
             url += `&name=${search}`;
         }
 
-        return this.httpClient.get<IWistiaVideo[]>(url).pipe(
-            map((response) => {
-                const videoResponse: IWistiaVideosResponse = {
-                    videos: response
-                };
-
-                return videoResponse;
+        return this.httpClient
+            .get<IWistiaVideo[]>(url, {
+                headers: this.getHeaders(accessToken)
             })
-        );
+            .pipe(
+                map((response) => {
+                    const videoResponse: IWistiaVideosResponse = {
+                        videos: response
+                    };
+
+                    return videoResponse;
+                })
+            );
     }
 
-    private getUrl(action: WistiaAction, accessToken: string, actionPostFix?: string): string {
-        return `https://api.wistia.com/v1/${action}${
-            actionPostFix ? actionPostFix : ''
-        }.json?access_token=${accessToken}`;
+    private getHeaders(accessToken: string):
+        | HttpHeaders
+        | {
+              [header: string]: string | string[];
+          } {
+        return {
+            Authorization: `Bearer ${accessToken}`
+        };
+    }
+
+    private getUrl(action: WistiaAction, actionPostFix?: string): string {
+        return `https://api.wistia.com/v1/${action}${actionPostFix ? actionPostFix : ''}.json`;
     }
 }
