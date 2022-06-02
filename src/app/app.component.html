@@ -78,9 +78,6 @@
                             >
                                 <div class="card full-height">
                                     <div libFlexRow [libFlexRowGap]="'16px'">
-                                        <div libFlexColumn>
-                                            <ngx-avatar [size]="40" [name]="getAvatarSourceName(project)"></ngx-avatar>
-                                        </div>
                                         <div libFlexColumn libFlexFill>
                                             <h4 libLineClamp [clampLines]="2">{{ project.name }}</h4>
                                         </div>
@@ -138,19 +135,6 @@
                                 </div>
                                 <div libFlexColumn>
                                     <div libFlexRow [libFlexRowGap]="'8px'">
-                                        <div libFlexColumn>
-                                            <button
-                                                class="w-cursor-pointer"
-                                                mat-icon-button
-                                                [matMenuTriggerFor]="sortMenu"
-                                            >
-                                                <mat-icon style="margin-top: 4px">{{
-                                                    currentSort.sortDirection === 'asc'
-                                                        ? 'arrow_upward'
-                                                        : 'arrow_downward'
-                                                }}</mat-icon>
-                                            </button>
-                                        </div>
                                         <div libFlexColumn class="w-cursor-pointer" [matMenuTriggerFor]="sortMenu">
                                             {{ currentSort.title }}
                                         </div>
