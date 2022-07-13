@@ -2,12 +2,11 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
-[![Stack Overflow][stack-shield]](https://stackoverflow.com/tags/kentico-kontent)
-[![GitHub Discussions][discussion-shield]](https://github.com/Kentico/Home/discussions)
+[![Stack Overflow][stack-shield]](https://stackoverflow.com/tags/kontent-ai)
 
 <p align="center">
-<image src="docs/kontent.webp" alt="kontent logo" width="150" />
-<image src="docs/wistia.png" 
+<image src="docs/kontent-ai.png" alt="Kontent.ai logo" width="150" />
+<image src="docs/wistia.png"
 alt="wistia logo" width="300">
 </p>
 
@@ -23,15 +22,15 @@ alt="wistia logo" width="300">
   <a href="#additional-resources">Resources</a>
 </p>
 
-This custom element for [Kentico Kontent](https://kontent.ai) allows users to upload, search & select videos from [wistia](https://www.wistia.com) media projects.
+This custom element for [Kontent.ai](https://kontent.ai) allows users to upload, search & select videos from [wistia](https://www.wistia.com) media projects.
 
 ## Features
 
--   Editors can
-    -   Select projects from Wistia
-    -   Upload new files
-    -   Search media files by name
-    -   Store media file json as value (example output below)
+- Editors can
+  - Select projects from Wistia
+  - Upload new files
+  - Search media files by name
+  - Store media file json as value (example output below)
 
 ## Demo
 
@@ -41,7 +40,7 @@ This custom element for [Kentico Kontent](https://kontent.ai) allows users to up
 
 Netlify has made this easy. If you click the deploy button below, it will guide you through the process of deploying it to Netlify and leave you with a copy of the repository in your account as well.
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Enngage/kontent-custom-element-wistia)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Kontent-ai-Learn//kontent-ai-learn-custom-element-wistia)
 
 ## Configuration
 
@@ -62,7 +61,7 @@ You will need to add the custom element to a content type filling in the hosted 
 
 The custom element saves JSON with selected media file as a string.
 
-Example: 
+Example:
 
 ```json
 {
@@ -114,7 +113,7 @@ Example:
 
 ## Development
 
-This custom element is built with `Angular`. See package.json for scripts regarding building & publishing the library.
+This custom element is built with Angular. See `package.json` for scripts regarding building & publishing the library.
 
 ## Contributors
 
@@ -132,10 +131,10 @@ Originally created by [@Enngage](https://github.com/Enngage)
 
 ## Additional Resources
 
--   [Custom Element Gallery on github](https://kentico.github.io/kontent-custom-element-samples/gallery/)
--   [Kentico Kontent's Integration documentation](https://docs.kontent.ai/tutorials/develop-apps/integrate/integrations-overview)
--   [Custom Element documentation](https://docs.kontent.ai/tutorials/develop-apps/integrate/content-editing-extensions)
--   [Custom Element API reference](https://docs.kontent.ai/reference/custom-elements-js-api)
+- [Custom Element Gallery on github](https://kentico.github.io/kontent-custom-element-samples/gallery/)
+- [Kontent.ai Integration](https://kontent.ai/learn/tutorials/develop-apps/integrate/integrations-overview)
+- [Custom Element documentation](https://kontent.ai/learn/tutorials/develop-apps/integrate/content-editing-extensions)
+- [Custom Element API reference](https://kontent.ai/learn/reference/custom-elements-js-api)
 
 [last-commit]: https://img.shields.io/github/last-commit/Enngage/kontent-custom-element-wistia?style=for-the-badge
 [contributors-shield]: https://img.shields.io/github/contributors/Enngage/kontent-custom-element-wistia.svg?style=for-the-badge
