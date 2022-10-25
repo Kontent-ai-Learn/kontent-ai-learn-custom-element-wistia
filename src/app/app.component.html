@@ -31,10 +31,8 @@
             <div *ngIf="isDisabled">
                 <div *ngIf="selectedVideo">
                     <div class="push-top">
-                        <ng-template
-                            [ngTemplateOutletContext]="{ videos: [selectedVideo], isSelectedVideo: true }"
-                            [ngTemplateOutlet]="videosTemplate"
-                        >
+                        <ng-template [ngTemplateOutletContext]="{ videos: [selectedVideo], isSelectedVideo: true }"
+                            [ngTemplateOutlet]="videosTemplate">
                         </ng-template>
                     </div>
 
@@ -71,11 +69,9 @@
                 <div class="push-top" *ngIf="!showUploader">
                     <div>
                         <div *ngIf="showProjectSelection" [libFlexRow]="true" [libFlexRowAlign]="'stretch'">
-                            <div
-                                libFlexColumn
+                            <div libFlexColumn
                                 [style.width]="'calc((100% / ' + projectsPerRow + ') - ' + projectsPerRowGap + ')'"
-                                *ngFor="let project of projects"
-                            >
+                                *ngFor="let project of projects">
                                 <div class="card full-height">
                                     <div libFlexRow [libFlexRowGap]="'16px'">
                                         <div libFlexColumn libFlexFill>
@@ -86,19 +82,11 @@
                                         {{ project.mediaCount }}
                                         {{ project.mediaCount === 1 ? 'video' : 'videos' }}
                                     </div>
-                                    <div
-                                        *ngIf="project.description"
-                                        class="light-text push-top-sm"
-                                        libLineClamp
-                                        [clampLines]="2"
-                                        [innerHtml]="project.description"
-                                    ></div>
+                                    <div *ngIf="project.description" class="light-text push-top-sm" libLineClamp
+                                        [clampLines]="2" [innerHtml]="project.description"></div>
                                     <div class="push-top push-bottom-sm" libFlexRow>
-                                        <div
-                                            libFlexColumn
-                                            (click)="handleSelectProject(project)"
-                                            class="secondary-button"
-                                        >
+                                        <div libFlexColumn (click)="handleSelectProject(project)"
+                                            class="secondary-button">
                                             <div libLineClamp [clampLines]="1">Select</div>
                                         </div>
                                     </div>
@@ -114,10 +102,8 @@
                             </div>
 
                             <div class="push-top">
-                                <ng-template
-                                    [ngTemplateOutletContext]="{ videos: [selectedVideo] }"
-                                    [ngTemplateOutlet]="videosTemplate"
-                                >
+                                <ng-template [ngTemplateOutletContext]="{ videos: [selectedVideo] }"
+                                    [ngTemplateOutlet]="videosTemplate">
                                 </ng-template>
                             </div>
                         </div>
@@ -125,13 +111,8 @@
                         <div *ngIf="selectedProject && !selectedVideo">
                             <div libFlexRow>
                                 <div libFlexColumn libFlexFill>
-                                    <input
-                                        [placeholder]="'Video name (exact match only)'"
-                                        class="search-input"
-                                        type="search"
-                                        autocomplete="off"
-                                        [formControl]="searchControl"
-                                    />
+                                    <input [placeholder]="'Video name (exact match only)'" class="search-input"
+                                        type="search" autocomplete="off" [formControl]="searchControl" />
                                 </div>
                                 <div libFlexColumn>
                                     <div libFlexRow [libFlexRowGap]="'8px'">
@@ -139,11 +120,8 @@
                                             {{ currentSort.title }}
                                         </div>
                                         <div libFlexColumn>
-                                            <button
-                                                class="w-cursor-pointer"
-                                                mat-icon-button
-                                                [matMenuTriggerFor]="sortMenu"
-                                            >
+                                            <button class="w-cursor-pointer" mat-icon-button
+                                                [matMenuTriggerFor]="sortMenu">
                                                 <mat-icon style="margin-top: 4px">{{ currentSort.matIcon }}</mat-icon>
                                             </button>
                                         </div>
@@ -153,11 +131,8 @@
 
                             <div class="push-top">
                                 <div *ngIf="showNoVideosNote" class="info-box">There are no videos</div>
-                                <ng-template
-                                    *ngIf="videos.length"
-                                    [ngTemplateOutletContext]="{ videos: videos }"
-                                    [ngTemplateOutlet]="videosTemplate"
-                                >
+                                <ng-template *ngIf="videos.length" [ngTemplateOutletContext]="{ videos: videos }"
+                                    [ngTemplateOutlet]="videosTemplate">
                                 </ng-template>
                             </div>
 
@@ -177,30 +152,31 @@
 <ng-template #videosTemplate let-videos="videos">
     <div [libFlexRow]="true" [libFlexRowAlign]="'stretch'">
         <ng-container *ngFor="let video of videos">
-            <div
-                libFlexColumn
-                [style.width]="'calc((100% / ' + videosPerRow + ') - ' + videosPerRowGap + ')'"
-                [libFlexColumnAlign]="'top'"
-            >
+            <div libFlexColumn [style.width]="'calc((100% / ' + videosPerRow + ') - ' + videosPerRowGap + ')'"
+                [libFlexColumnAlign]="'top'">
                 <div class="card no-pad full-height">
                     <div class="pad">
                         <div style="min-height: 38px" libLineClamp [clampLines]="2">
                             {{ video.name }}
                         </div>
+                        <div>
+                            <div libFlexRow [libFlexRowGap]="'16px'">
+                                <div libFlexColumn>
+                                   ID:
+                                </div>
+                                <div libFlexColumn libFlexFill>
+                                    <lib-copy-text [text]="video.id"></lib-copy-text>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- Video preview -->
                     <div *ngIf="videoPreviewType === 'video'">
                         <div class="wistia_responsive_padding" style="padding: 56.25% 0 0 0; position: relative">
-                            <div
-                                class="wistia_responsive_wrapper"
-                                style="height: 100%; left: 0; position: absolute; top: 0; width: 100%"
-                            >
-                                <div
-                                    [ngClass]="getWistiaEmbedClassForVideo(video)"
-                                    seo="false"
-                                    videoFoam="true"
-                                    style="height: 100%; width: 100%"
-                                >
+                            <div class="wistia_responsive_wrapper"
+                                style="height: 100%; left: 0; position: absolute; top: 0; width: 100%">
+                                <div [ngClass]="getWistiaEmbedClassForVideo(video)" seo="false" videoFoam="true"
+                                    style="height: 100%; width: 100%">
                                     &nbsp;
                                 </div>
                             </div>
@@ -210,28 +186,24 @@
                     <div *ngIf="videoPreviewType === 'thumbnail'">
                         <img [src]="video.thumbnail.url" [style.width]="'100%'" />
                     </div>
-                    <div class="pad light-text" [libFlexRow]="true">
-                        <div libFlexColumn *ngIf="!isDisabled">
-                            <span
-                                *ngIf="video.id !== selectedVideo?.id"
-                                (click)="handleSelectVideo(video)"
-                                class="secondary-button"
-                            >
-                                Select
-                            </span>
-                            <span
-                                *ngIf="video.id === selectedVideo?.id"
-                                (click)="handleClearSelectedVideo()"
-                                class="primary-button"
-                            >
-                                Replace
-                            </span>
-                        </div>
-                        <div libFlexColumn libFlexFill>
-                            {{ formatVideoDuration(video) }}
-                        </div>
-                        <div libFlexColumn>
-                            {{ getVideoDate(video) }}
+                    <div class="pad">                     
+                        <div class="light-text" [libFlexRow]="true">
+                            <div libFlexColumn *ngIf="!isDisabled">
+                                <span *ngIf="video.id !== selectedVideo?.id" (click)="handleSelectVideo(video)"
+                                    class="secondary-button">
+                                    Select
+                                </span>
+                                <span *ngIf="video.id === selectedVideo?.id" (click)="handleClearSelectedVideo()"
+                                    class="primary-button">
+                                    Replace
+                                </span>
+                            </div>
+                            <div libFlexColumn libFlexFill>
+                                {{ formatVideoDuration(video) }}
+                            </div>
+                            <div libFlexColumn>
+                                {{ getVideoDate(video) }}
+                            </div>
                         </div>
                     </div>
                 </div>
