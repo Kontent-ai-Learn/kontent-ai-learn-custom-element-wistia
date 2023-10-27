@@ -1,0 +1,21 @@
+<div class="w-copy" (click)="handleCopyText()">
+    <div libFlexRow [libFlexRowGap]="'16px'" class="pad">
+        <div libFlexColumn>
+            <mat-icon>{{copied ? 'done': 'content_copy'}}</mat-icon>
+        </div>
+        <div libFlexColumn libFlexFill class="w-copy-text">
+            <div *ngIf="copied"  >
+                {{ text }}
+            </div>
+            <div *ngIf="!copied" >
+                {{ text }}
+            </div>
+        </div>
+        <div libFlexColumn *ngIf="copied" libText3 class="light-text">
+            Copied
+        </div>
+        <div libFlexColumn *ngIf="!copied" libText3 class="light-text">
+            Click to copy
+        </div>
+    </div>
+</div>

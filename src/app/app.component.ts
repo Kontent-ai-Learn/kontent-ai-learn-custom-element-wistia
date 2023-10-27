@@ -1,6 +1,6 @@
 import { AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, OnInit } from '@angular/core';
 import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -98,7 +98,7 @@ export class AppComponent extends CoreComponent implements OnInit, AfterViewChec
     public videos: IWistiaVideo[] = [];
     public currentSort: ISortItem = this.sortItems[0];
     public currentSearch?: string;
-    public searchControl: FormControl = new FormControl();
+    public searchControl: UntypedFormControl = new UntypedFormControl();
 
     public showNoVideosNote: boolean = false;
 
